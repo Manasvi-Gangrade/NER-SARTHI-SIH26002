@@ -1,0 +1,332 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-safe: var(--safe);
+  --color-watch: var(--watch);
+  --color-critical: var(--critical);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-ashoka: var(--ashoka);
+  --color-map: var(--map);
+  --font-sans: "Manrope", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+:root {
+  --radius: 0.5rem;
+  --background: oklch(0.985 0.005 240);
+  --foreground: oklch(0.22 0.03 250);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.03 250);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.03 250);
+  --primary: oklch(0.32 0.11 248); /* Deep Gov Navy #0B3D6B style */
+  --primary-foreground: oklch(0.99 0.002 240);
+  --secondary: oklch(0.96 0.012 240);
+  --secondary-foreground: oklch(0.28 0.08 248);
+  --muted: oklch(0.96 0.008 240);
+  --muted-foreground: oklch(0.48 0.03 248);
+  --accent: oklch(0.94 0.02 242);
+  --accent-foreground: oklch(0.25 0.08 248);
+  --destructive: oklch(0.58 0.22 27);
+  --destructive-foreground: oklch(0.99 0.002 240);
+  --border: oklch(0.90 0.012 240);
+  --input: oklch(0.88 0.015 240);
+  --ring: oklch(0.45 0.12 248);
+  --safe: oklch(0.55 0.18 150); /* Crisp emerald green */
+  --watch: oklch(0.72 0.16 75); /* Amber / Saffron warning */
+  --critical: oklch(0.58 0.24 28); /* Red disaster alert */
+  --warning: oklch(0.75 0.15 72);
+  --warning-foreground: oklch(0.32 0.08 60);
+  --ashoka: oklch(0.42 0.14 250);
+  --map: oklch(0.97 0.015 235);
+  --map-land: oklch(0.93 0.025 235);
+  --map-line: oklch(0.75 0.05 240);
+}
+
+.dark {
+  --background: oklch(0.15 0.03 250);
+  --foreground: oklch(0.98 0.005 240);
+  --card: oklch(0.20 0.03 250);
+  --card-foreground: oklch(0.98 0.005 240);
+  --popover: oklch(0.20 0.03 250);
+  --popover-foreground: oklch(0.98 0.005 240);
+  --primary: oklch(0.85 0.08 240);
+  --primary-foreground: oklch(0.18 0.04 250);
+  --secondary: oklch(0.26 0.03 250);
+  --secondary-foreground: oklch(0.98 0.005 240);
+  --muted: oklch(0.24 0.02 250);
+  --muted-foreground: oklch(0.70 0.02 240);
+  --accent: oklch(0.26 0.03 250);
+  --accent-foreground: oklch(0.98 0.005 240);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.60 0.12 245);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    margin: 0;
+    min-width: 320px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Official Government Command Header Line */
+.ashoka-line {
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    #ff9933 0%,
+    #ff9933 33.3%,
+    #ffffff 33.3%,
+    #ffffff 66.6%,
+    #138808 66.6%,
+    #138808 100%
+  );
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Ashoka Chakra Spin / Geometry */
+.chakra-mark {
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  background: repeating-conic-gradient(
+    currentColor 0deg 2.5deg,
+    transparent 2.5deg 15deg
+  );
+  mask: radial-gradient(circle, transparent 0 18%, black 20% 100%);
+}
+
+/* Command Center Glass & Card Panels */
+.panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: 0 4px 20px -2px rgba(11, 61, 107, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.panel:hover {
+  box-shadow: 0 8px 30px -4px rgba(11, 61, 107, 0.1), 0 4px 10px -2px rgba(0, 0, 0, 0.05);
+}
+
+.section-kicker {
+  color: var(--primary);
+  font-size: 0.68rem;
+  line-height: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.section-title {
+  color: var(--foreground);
+  font-size: clamp(1.8rem, 3.2vw, 3rem);
+  line-height: 1.12;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* GIS Grid background pattern */
+.hero-grid {
+  background-color: var(--background);
+  background-image: 
+    radial-gradient(circle at 50% 20%, rgba(11, 61, 107, 0.04) 0%, transparent 70%),
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 100% 100%, 36px 36px, 36px 36px;
+}
+
+/* High-tech status badges */
+.status-safe {
+  background: color-mix(in oklab, var(--safe) 14%, transparent);
+  color: var(--safe);
+  border: 1px solid color-mix(in oklab, var(--safe) 30%, transparent);
+}
+.status-watch {
+  background: color-mix(in oklab, var(--watch) 16%, transparent);
+  color: var(--warning-foreground);
+  border: 1px solid color-mix(in oklab, var(--watch) 35%, transparent);
+}
+.status-critical {
+  background: color-mix(in oklab, var(--critical) 14%, transparent);
+  color: var(--critical);
+  border: 1px solid color-mix(in oklab, var(--critical) 30%, transparent);
+}
+
+/* Pulse radar effect */
+.pulse-dot {
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.3);
+  }
+}
+
+.radar-ping {
+  animation: radar-expand 2.4s ease-out infinite;
+  transform-origin: center;
+}
+
+@keyframes radar-expand {
+  0% {
+    r: 6;
+    opacity: 0.8;
+  }
+  100% {
+    r: 28;
+    opacity: 0;
+  }
+}
+
+/* Phone Mockup Frame for Citizen/Driver */
+.phone-device {
+  position: relative;
+  width: min(320px, 90vw);
+  height: 640px;
+  border: 10px solid #1e293b;
+  border-radius: 40px;
+  background: #ffffff;
+  box-shadow: 
+    0 25px 50px -12px rgba(11, 61, 107, 0.25),
+    0 0 0 1px rgba(0, 0, 0, 0.1),
+    inset 0 0 4px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.phone-notch {
+  width: 120px;
+  height: 22px;
+  margin: 0 auto;
+  border-radius: 0 0 14px 14px;
+  background: #1e293b;
+  position: relative;
+  z-index: 20;
+}
+
+/* Marquee Alert Bar */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 32s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Source chip */
+.source-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--muted);
+  padding: 0.35rem 0.65rem;
+  color: var(--muted-foreground);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Chat typing dots */
+.typing-dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--primary);
+  animation: typing 1s infinite ease-in-out;
+}
+.typing-dot.delay-1 { animation-delay: 0.15s; }
+.typing-dot.delay-2 { animation-delay: 0.3s; }
+
+@keyframes typing {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50% { transform: translateY(-4px); opacity: 1; }
+}
+
+/* Micro animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: oklch(0.85 0.015 240);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.70 0.025 240);
+}

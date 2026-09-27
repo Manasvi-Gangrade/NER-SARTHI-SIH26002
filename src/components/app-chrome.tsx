@@ -1,50 +1,52 @@
 import { useState, useEffect } from 'react';
 import { Link, useRouterState } from '@tanstack/react-router';
 import { 
-  BellRing, Menu, X, Radio, ShieldCheck, AlertTriangle, FileText, 
-  PhoneCall, Download, CheckCircle, ExternalLink, Activity, Satellite,
-  Volume2, VolumeX, Languages, Printer, Copy, Sparkles, ZoomIn, ZoomOut,
-  Eye, CornerDownRight, Navigation, Anchor, Train
+  Clock, MapPin, Cloud, Volume2, VolumeX, Play, BellRing, Menu, X, 
+  ShieldCheck, FileText, CheckCircle, Copy, Printer, Download, Sparkles,
+  MessageSquare, Send, Plus, ChevronRight, Activity, ArrowUpRight
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { bhashiniVoiceAdvisories, strategicChokepoints, corridors } from '@/lib/ner-data';
-
-const navItems = [
-  { to: '/' as const, label: 'Command Center', badge: 'Live GIS' },
-  { to: '/corridors' as const, label: 'Corridors & Disruption', badge: '2 Critical' },
-  { to: '/fleet' as const, label: 'Fleet & Supply Chain', badge: '1,284 Active' },
-  { to: '/roles' as const, label: 'Role Portals', badge: '6 Desks' },
-  { to: '/citizen' as const, label: 'Citizen & Driver', badge: 'Mobile App' },
-  { to: '/copilot' as const, label: 'AI Decision Co-Pilot', badge: 'RAG SLM' },
-];
+import { bhashiniVoiceAdvisories, strategicChokepoints } from '@/lib/ner-data';
 
 export function AppChrome({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
-  const [broadcast, setBroadcast] = useState(false);
   const [sitrepModal, setSitrepModal] = useState(false);
-  const [time, setTime] = useState('');
+  const [authModal, setAuthModal] = useState<'login' | 'reg' | null>(null);
+  const [timeStr, setTimeStr] = useState('12:06:00 pm');
+  const [dateStr, setDateStr] = useState('Sun, 27 Sep');
   const [audioEnabled, setAudioEnabled] = useState(false);
   const [selectedLang, setSelectedLang] = useState('English');
-  const [highContrast, setHighContrast] = useState(false);
-  const [textZoom, setTextZoom] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  // Floating INDRABOT / SARTHIBOT Drawer state
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatInput, setChatInput] = useState('');
+  const [chatMessages, setChatMessages] = useState<{ sender: 'user' | 'bot'; text: string }[]>([
+    {
+      sender: 'bot',
+      text: 'NER-SARTHI Global Ontology Engine AI online. Select an Intelligence Mode (+) next to the input to generate charts, tables, or search terrain telemetry for insights.'
+    }
+  ]);
+
   const path = useRouterState({ select: s => s.location.pathname });
 
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      setTime(
-        now.toLocaleDateString('en-IN', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric',
-        }) + ' · ' +
-        now.toLocaleTimeString('en-IN', {
+      setTimeStr(
+        now.toLocaleTimeString('en-US', {
           hour: '2-digit',
           minute: '2-digit',
           second: '2-digit',
-          hour12: false,
-        }) + ' IST'
+          hour12: true,
+        }).toLowerCase()
+      );
+      setDateStr(
+        now.toLocaleDateString('en-US', {
+          weekday: 'short',
+          day: 'numeric',
+          month: 'short',
+        })
       );
     };
     updateTime();
@@ -82,6 +84,24 @@ export function AppChrome({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const handleSendChat = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chatInput.trim()) return;
+    const userText = chatInput.trim();
+    setChatMessages(prev => [...prev, { sender: 'user', text: userText }]);
+    setChatInput('');
+
+    setTimeout(() => {
+      setChatMessages(prev => [
+        ...prev, 
+        { 
+          sender: 'bot', 
+          text: `Grounded SITREP for "${userText}": NH-27 KM 148 Jatinga Slump risk index is 86/100 with 124mm rainfall. Umrangso bypass is active. NFR Railhead Ro-Ro freight shuttle on 4-hour standby at Lumding.` 
+        }
+      ]);
+    }, 600);
+  };
+
   const handleCopySitrep = () => {
     const sitrepContent = `=====================================================
 GOVERNMENT OF INDIA · MINISTRY OF DEVELOPMENT OF NER
@@ -109,507 +129,365 @@ Authenticated by: National Decision Support System (NER-SARTHI)`;
   };
 
   return (
-    <div className={`min-h-screen bg-background text-foreground flex flex-col ${highContrast ? 'high-contrast' : ''} ${textZoom ? 'text-zoom-lg' : ''}`}>
-      {/* Tiranga National Stripe */}
-      <div className="ashoka-line" />
-
-      {/* Official Government of India Top Banner */}
-      <div className="border-b border-border/80 bg-muted/40 px-4 py-1.5 text-[11px] text-muted-foreground lg:px-8">
-        <div className="mx-auto flex max-w-[1540px] items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1 font-semibold text-foreground">
-              <span className="size-2 rounded-full bg-emerald-600 inline-block" />
-              भारत सरकार · Government of India
-            </span>
-            <span className="hidden md:inline text-border">|</span>
-            <span className="hidden md:inline font-medium">
-              पूर्वोत्तर क्षेत्र विकास मंत्रालय (MDoNER)
-            </span>
-          </div>
-
-          <div className="flex items-center gap-3 sm:gap-4 text-[10px]">
-            <span className="hidden sm:flex items-center gap-1.5 font-mono text-foreground font-semibold">
-              <span className="pulse-dot size-1.5 rounded-full bg-safe" />
-              {time || 'LIVE TELEMETRY IST'}
-            </span>
-            <span className="hidden lg:flex items-center gap-1.5 text-primary font-semibold">
-              <Satellite className="size-3.5" />
-              NavIC L5 / GSAT-7A Synced
-            </span>
-            <span className="font-bold text-ashoka bg-ashoka/10 px-2 py-0.5 rounded">
-              PM Gati Shakti National Grid
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Header */}
-      <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-md shadow-xs">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
+      {/* 
+        ====================================================
+        1. INDRA EXACT TOP NAVBAR
+        ====================================================
+      */}
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-2xs">
         <div className="mx-auto flex max-w-[1540px] items-center justify-between gap-4 px-4 py-2.5 lg:px-8">
-          {/* Logo & National Emblem Identity */}
-          <Link to="/" className="flex shrink-0 items-center gap-3" onClick={() => setOpen(false)}>
-            <div className="grid size-11 place-items-center rounded-lg border-2 border-primary/20 bg-primary/5 text-primary shadow-xs">
-              <span className="chakra-mark text-primary" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xl font-black tracking-tight text-primary">NER-SARTHI</span>
-                <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-primary">
-                  National GIS Platform
-                </span>
-              </div>
-              <p className="text-[10px] font-semibold text-muted-foreground tracking-wide">
-                Smart Logistics & Accessibility Intelligence for North Eastern Region
-              </p>
-            </div>
-          </Link>
+          {/* Left capsule: Time, Date, Location, Weather */}
+          <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-100/80 px-3.5 py-1.5 text-xs text-slate-600 shadow-2xs font-medium">
+            <span className="flex items-center gap-1.5 font-bold text-slate-800">
+              <Clock className="size-3.5 text-slate-500" />
+              {timeStr}
+            </span>
+            <span className="text-slate-300">|</span>
+            <span>{dateStr}</span>
+            <span className="text-slate-300 hidden sm:inline">|</span>
+            <span className="hidden sm:flex items-center gap-1">
+              <MapPin className="size-3.5 text-red-500" />
+              New Delhi
+            </span>
+            <span className="text-slate-300 hidden md:inline">|</span>
+            <span className="hidden md:flex items-center gap-1 font-semibold text-slate-700">
+              <Cloud className="size-3.5 text-sky-500" />
+              26.4°C
+            </span>
+          </div>
 
-          {/* Action Tools (Inspired by NETRA & INDRA Command Operations) */}
-          <div className="flex items-center gap-2 sm:gap-2.5">
-            {/* Audio Voice Guidance Toggle */}
-            <Button
-              size="sm"
-              variant={audioEnabled ? 'default' : 'outline'}
-              className={`h-8 px-2.5 text-xs font-semibold gap-1.5 transition-all ${
-                audioEnabled 
-                  ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs' 
-                  : 'border-border text-muted-foreground hover:text-foreground'
-              }`}
+          {/* Right Action Tools: Speaker, Select Language, Simulation, Registration, Login */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Blue Speaker Button */}
+            <button
+              type="button"
               onClick={toggleAudio}
-              title={audioEnabled ? 'Voice Guidance On (Web Speech Active)' : 'Turn On Audio Guidance'}
+              className="grid size-9 place-items-center rounded-lg border border-sky-200 bg-sky-50 text-blue-600 hover:bg-sky-100 transition-colors shadow-2xs"
+              title={audioEnabled ? 'Turn Off Audio Guidance' : 'Turn On Audio Guidance'}
             >
-              {audioEnabled ? <Volume2 className="size-3.5 animate-pulse" /> : <VolumeX className="size-3.5" />}
-              <span className="hidden sm:inline">{audioEnabled ? 'Audio On' : 'Voice'}</span>
-            </Button>
+              {audioEnabled ? <Volume2 className="size-4 animate-pulse text-emerald-600" /> : <Volume2 className="size-4" />}
+            </button>
 
-            {/* Bhashini Multi-Language Dropdown */}
-            <div className="relative inline-flex items-center">
+            {/* Select Language Dropdown */}
+            <div className="relative">
               <select
                 aria-label="Select Regional Language"
                 value={selectedLang}
                 onChange={(e) => handleLanguageChange(e.target.value)}
-                className="h-8 rounded-md border border-input bg-background/90 px-2 py-0.5 text-xs font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer shadow-2xs"
+                className="h-9 rounded-lg border border-slate-300 bg-white px-3 py-1 text-xs font-semibold text-slate-700 shadow-2xs hover:border-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-600 cursor-pointer"
               >
-                <option value="English">🇮🇳 English</option>
-                <option value="हिन्दी">🇮🇳 हिन्दी (Hindi)</option>
-                <option value="অসমীয়া">🇮🇳 অসমীয়া (Assam)</option>
-                <option value="বাংলা">🇮🇳 বাংলা (Bengali)</option>
-                <option value="মৈতৈলোন্">🇮🇳 মৈতৈলোন্ (Manipuri)</option>
+                <option value="English">Select Language</option>
+                <option value="English">English</option>
+                <option value="हिन्दी">हिन्दी (Hindi)</option>
+                <option value="অসমীয়া">অসমীয়া (Assam)</option>
+                <option value="বাংলা">বাংলা (Bengali)</option>
+                <option value="মৈতৈলোন্">মৈতৈলোন্ (Manipuri)</option>
               </select>
             </div>
 
-            {/* Accessibility Quick Controls (SUVIDHA Kiosk inspired) */}
-            <div className="hidden xl:flex items-center gap-1 border-l border-r border-border px-2">
-              <button
-                type="button"
-                onClick={() => setHighContrast(!highContrast)}
-                className={`p-1.5 rounded text-xs font-bold transition-colors ${highContrast ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'}`}
-                title="Toggle High Contrast Mode"
-              >
-                <Eye className="size-3.5" />
-              </button>
-              <button
-                type="button"
-                onClick={() => setTextZoom(!textZoom)}
-                className={`p-1.5 rounded text-xs font-bold transition-colors ${textZoom ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'}`}
-                title="Toggle Text Zoom"
-              >
-                {textZoom ? <ZoomOut className="size-3.5" /> : <ZoomIn className="size-3.5" />}
-              </button>
-            </div>
-
-            {/* SITREP Executive Report Button (from NETRA Rail) */}
-            <Button 
-              size="sm" 
-              variant="outline" 
-              className="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold border-primary/20 hover:bg-primary/5 text-primary h-8"
-              onClick={() => setSitrepModal(true)}
+            {/* Simulation Pill Button */}
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-9 rounded-lg border-blue-200 text-blue-600 font-bold text-xs hover:bg-blue-50 gap-1.5 shadow-2xs hidden sm:inline-flex"
+              onClick={() => {
+                const el = document.getElementById('bvs-section') || document.getElementById('dashboard-view');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
             >
-              <FileText className="size-3.5" />
-              <span>SITREP Dossier</span>
+              <Play className="size-3 fill-blue-600" />
+              SIMULATION
             </Button>
 
-            {/* Emergency Broadcast Button */}
-            <Button 
-              size="sm" 
-              className="bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs shadow-xs h-8"
-              onClick={() => setBroadcast(true)}
+            {/* Registration Emerald Pill */}
+            <Button
+              size="sm"
+              className="h-9 rounded-lg bg-[#059669] hover:bg-emerald-700 text-white font-bold text-xs uppercase px-3.5 sm:px-4 shadow-xs"
+              onClick={() => setSitrepModal(true)}
             >
-              <BellRing className="size-3.5 mr-1" />
-              <span className="hidden sm:inline">Emergency</span> Broadcast
+              REGISTRATION
+            </Button>
+
+            {/* Login Royal Blue Pill */}
+            <Button
+              size="sm"
+              className="h-9 rounded-lg bg-[#2563eb] hover:bg-blue-700 text-white font-bold text-xs uppercase px-4 shadow-xs"
+              onClick={() => setAuthModal('login')}
+            >
+              LOGIN
             </Button>
 
             {/* Mobile Nav Toggle */}
-            <Button 
-              size="icon" 
-              variant="ghost" 
-              className="lg:hidden h-8 w-8" 
-              aria-label={open ? 'Close navigation' : 'Open navigation'} 
+            <button
+              type="button"
+              className="lg:hidden p-1.5 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-100"
               onClick={() => setOpen(!open)}
+              aria-label="Toggle navigation menu"
             >
-              {open ? <X className="size-4" /> : <Menu className="size-4" />}
-            </Button>
+              {open ? <X className="size-5" /> : <Menu className="size-5" />}
+            </button>
           </div>
         </div>
 
-        {/* Desktop Navigation Links */}
-        <nav aria-label="Primary navigation" className="mx-auto hidden max-w-[1540px] items-center gap-1 overflow-x-auto px-4 pb-2 pt-1 lg:flex lg:px-8">
-          {navItems.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              activeOptions={{ exact: item.to === '/' }}
-              className="group relative shrink-0 rounded-md px-3.5 py-1.5 text-xs font-bold text-muted-foreground transition-all hover:bg-muted hover:text-foreground data-[status=active]:bg-primary data-[status=active]:text-primary-foreground shadow-2xs"
-            >
-              <span className="flex items-center gap-2">
-                {item.label}
-                <span className="rounded-full bg-muted-foreground/15 px-1.5 py-0.2 text-[9px] font-extrabold uppercase group-data-[status=active]:bg-white/20 group-data-[status=active]:text-white">
-                  {item.badge}
-                </span>
-              </span>
-            </Link>
-          ))}
-        </nav>
-
-        {/* Mobile Navigation Drawer */}
+        {/* Mobile Dropdown Nav */}
         {open && (
-          <nav aria-label="Mobile navigation" className="grid border-t border-border bg-card p-3 lg:hidden space-y-1">
-            {navItems.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                onClick={() => setOpen(false)}
-                activeOptions={{ exact: item.to === '/' }}
-                className="flex items-center justify-between rounded-md px-4 py-2.5 text-sm font-semibold text-muted-foreground hover:bg-muted hover:text-foreground data-[status=active]:bg-primary data-[status=active]:text-primary-foreground"
-              >
-                <span>{item.label}</span>
-                <span className="text-[10px] font-bold uppercase rounded bg-muted-foreground/15 px-1.5 py-0.5">
-                  {item.badge}
-                </span>
-              </Link>
-            ))}
-            <div className="pt-2 border-t border-border mt-2 space-y-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="w-full justify-start text-xs font-semibold"
-                onClick={() => { setOpen(false); setSitrepModal(true); }}
-              >
-                <FileText className="size-3.5 mr-2" /> Situation Report (SITREP Dossier)
-              </Button>
-              <div className="flex items-center justify-between px-2 pt-1 text-xs">
-                <span className="text-muted-foreground font-medium">High Contrast Mode</span>
-                <Button size="sm" variant="ghost" onClick={() => setHighContrast(!highContrast)}>
-                  {highContrast ? 'Enabled' : 'Disabled'}
-                </Button>
-              </div>
-            </div>
-          </nav>
-        )}
-
-        {/* Breaking Live Incident Marquee (INDRA Reference) */}
-        <div className="border-t border-border/80 bg-amber-500/10 px-4 py-1 text-xs text-amber-900 font-medium overflow-hidden">
-          <div className="mx-auto max-w-[1540px] flex items-center gap-3">
-            <span className="shrink-0 flex items-center gap-1.5 font-bold uppercase tracking-wider text-[10px] bg-amber-500 text-white px-2 py-0.5 rounded">
-              <AlertTriangle className="size-3" /> Live Bulletin
-            </span>
-            <div className="overflow-hidden whitespace-nowrap flex-1">
-              <div className="marquee-track inline-block text-[11px] font-medium">
-                <span className="mx-4 font-semibold">🔴 NH-27 Landslide Warning: KM 148 Jatinga Slump (Dima Hasao) saturated. Heavy vehicles rerouted via Umrangso.</span>
-                <span className="mx-4 font-semibold">🟡 Siliguri Corridor Check: 22km Chokepoint clear with heavy freight pacing (4,200 trucks/day).</span>
-                <span className="mx-4 font-semibold">🔵 Jogighopa MMLP: Rail-to-River NW-2 Ro-Ro barge staging initialized for Barak Valley foodgrains.</span>
-                <span className="mx-4 font-semibold">🟡 Mangan Axis: Single-lane traffic restored at 29th Mile with BRO escort. Priority clearance for NER-MED-209.</span>
-                <span className="mx-4 font-semibold">🟢 Kohima–Imphal NH-02: Normal transit resumed post slope rock-net stabilization.</span>
-                <span className="mx-4 font-semibold">🛰️ NavIC Constellation: 8/8 States Synced · 1,284 Essential Cargo Shipments Monitored.</span>
-              </div>
-            </div>
+          <div className="border-t border-slate-200 bg-white p-3 lg:hidden space-y-1 text-xs font-bold text-slate-700">
+            <Link to="/" onClick={() => setOpen(false)} className="block p-2 rounded hover:bg-slate-100">
+              Command Center (GIS)
+            </Link>
+            <Link to="/corridors" onClick={() => setOpen(false)} className="block p-2 rounded hover:bg-slate-100">
+              Strategic Corridors
+            </Link>
+            <Link to="/fleet" onClick={() => setOpen(false)} className="block p-2 rounded hover:bg-slate-100">
+              NavIC Fleet Telemetry
+            </Link>
+            <Link to="/roles" onClick={() => setOpen(false)} className="block p-2 rounded hover:bg-slate-100">
+              Role Portals
+            </Link>
+            <Link to="/citizen" onClick={() => setOpen(false)} className="block p-2 rounded hover:bg-slate-100">
+              Citizen & Driver Mobile
+            </Link>
+            <Link to="/copilot" onClick={() => setOpen(false)} className="block p-2 rounded hover:bg-slate-100">
+              AI Decision Co-Pilot
+            </Link>
           </div>
-        </div>
+        )}
       </header>
 
-      {/* Main Page Content */}
-      <main className="flex-1">{children}</main>
-
-      {/* Official Government Footer */}
-      <footer className="mt-16 border-t border-border bg-slate-900 text-slate-100">
-        <div className="ashoka-line" />
-        <div className="mx-auto max-w-[1540px] px-4 py-12 lg:px-8">
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 pb-10 border-b border-slate-800">
-            <div>
-              <div className="flex items-center gap-2 text-white">
-                <span className="chakra-mark text-amber-400 size-6" />
-                <span className="text-xl font-black">NER-SARTHI</span>
-              </div>
-              <p className="mt-3 text-xs leading-5 text-slate-400">
-                Next-Generation AI Logistics & Accessibility Intelligence Platform built for the Ministry of Development of North Eastern Region (MDoNER).
-              </p>
-              <div className="mt-4 flex items-center gap-2 text-[11px] text-slate-400">
-                <ShieldCheck className="size-4 text-emerald-400" />
-                <span>Gati Shakti National Master Plan Aligned</span>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                Operational Desks
-              </h3>
-              <ul className="mt-3 space-y-2 text-xs text-slate-400">
-                <li><Link to="/corridors" className="hover:text-white transition-colors">Strategic Corridors & Disruption</Link></li>
-                <li><Link to="/fleet" className="hover:text-white transition-colors">NavIC Fleet Telemetry & Convoys</Link></li>
-                <li><Link to="/roles" className="hover:text-white transition-colors">District Magistrate (DM) War Room</Link></li>
-                <li><Link to="/copilot" className="hover:text-white transition-colors">RAG Decision Intelligence Desk</Link></li>
-                <li><Link to="/citizen" className="hover:text-white transition-colors">Citizen SOS & Offline Field Reporter</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                Emergency & Institutional Linkages
-              </h3>
-              <ul className="mt-3 space-y-2 text-xs text-slate-400">
-                <li className="flex items-center gap-2"><PhoneCall className="size-3.5 text-amber-400" /> National Disaster Response (NDRF): 1078</li>
-                <li className="flex items-center gap-2"><PhoneCall className="size-3.5 text-amber-400" /> MDoNER Emergency Control: 1800-11-2026</li>
-                <li className="flex items-center gap-2"><Activity className="size-3.5 text-emerald-400" /> Border Roads Organisation (BRO Project Swastik)</li>
-                <li className="flex items-center gap-2"><CheckCircle className="size-3.5 text-emerald-400" /> Geological Survey of India (GSI Landslide Grid)</li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                National Mission Alignment
-              </h3>
-              <div className="mt-3 rounded-lg border border-slate-800 bg-slate-950/60 p-4 text-xs text-slate-400">
-                <p className="font-bold text-white">MDoNER Digital Initiative</p>
-                <p className="mt-1 text-slate-400">Integrated with <strong className="text-amber-400">PM Gati Shakti & NESIDS</strong>.</p>
-                <p className="mt-2 text-[10px] text-slate-500">
-                  Advanced regional decision-support system monitoring all 8 North Eastern states.
-                </p>
-              </div>
-            </div>
+      {/* 
+        ====================================================
+        2. INDRA EXACT CRIMSON RED LIVE ALERT FEED MARQUEE
+        ====================================================
+      */}
+      <div className="bg-[#c81e1e] text-white px-4 py-1.5 text-xs font-bold overflow-hidden shadow-xs flex items-center">
+        <div className="mx-auto max-w-[1540px] w-full flex items-center gap-3">
+          {/* Dark Red Capsule Badge */}
+          <div className="shrink-0 flex items-center gap-2 rounded-full bg-[#991b1b] px-3 py-0.5 text-[11px] font-black uppercase tracking-wider text-white border border-red-400/40 shadow-xs">
+            <span className="size-2 rounded-full bg-white animate-ping inline-block" />
+            LIVE ALERT FEED
           </div>
 
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-            <p>© 2026 Ministry of Development of North Eastern Region · Government of India.</p>
-            <p className="flex items-center gap-2">
-              <span className="size-2 rounded-full bg-emerald-500" /> All 8 NER States Active: AS, AR, MN, ML, MZ, NL, SK, TR
-            </p>
+          {/* Marquee Text */}
+          <div className="overflow-hidden whitespace-nowrap flex-1">
+            <div className="marquee-track inline-block text-[11.5px] font-medium text-white tracking-wide">
+              <span className="mx-4 font-bold">DM offices in UP & NER [Status: Running]</span>
+              <span className="mx-4 font-bold">• ECONOMY: Q3 GDP Growth recorded at 7.2% — RBI integration stable [Confidence: 98%]</span>
+              <span className="mx-4 font-bold">• VOICE: Processed 45K citizen grievance calls today — Hindi, Assamese & Marathi</span>
+              <span className="mx-4 font-bold">• NH-27 ALERT: High Landslide Probability at KM 148 Jatinga Slump [Confidence: 94%] — Heavy vehicles diverted to Umrangso</span>
+              <span className="mx-4 font-bold">• CHOKEPOINT: Siliguri Corridor ("Chicken's Neck") processing 4,200 commercial trucks with 0 bottleneck delay</span>
+              <span className="mx-4 font-bold">• SIKKIM: Single-lane clearance on NH-10 at 29th Mile with BRO Project Swastik escort</span>
+              <span className="mx-4 font-bold">• MULTI-MODAL: NFR Railhead Ro-Ro & IWAI National Waterway-2 River Barge on active standby</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Page Body */}
+      <main className="flex-1">{children}</main>
+
+      {/* 
+        ====================================================
+        3. FLOATING SARTHIBOT / INDRABOT DRAWER & BUTTON
+        ====================================================
+      */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        {/* Floating Chat Drawer Popout */}
+        {chatOpen && (
+          <div className="mb-3 w-[340px] sm:w-[400px] rounded-2xl border border-slate-200 bg-white/95 p-4 shadow-2xl backdrop-blur-md animate-fade-in text-xs">
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+              <div className="flex items-center gap-2">
+                <div className="grid size-8 place-items-center rounded-full bg-blue-600 text-white">
+                  <Sparkles className="size-4" />
+                </div>
+                <div>
+                  <h4 className="font-black text-sm text-slate-900">SARTHIBOT AI</h4>
+                  <p className="text-[10px] text-slate-500 font-semibold">Grounded Decision Intelligence SLM</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setChatOpen(false)}
+                className="text-slate-400 hover:text-slate-600 p-1"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+
+            {/* Conversation Window */}
+            <div className="my-3 max-h-[260px] overflow-y-auto space-y-2.5 pr-1">
+              {chatMessages.map((msg, idx) => (
+                <div
+                  key={idx}
+                  className={`rounded-xl p-3 text-xs leading-relaxed ${
+                    msg.sender === 'user'
+                      ? 'ml-auto bg-blue-600 text-white max-w-[85%]'
+                      : 'bg-slate-100 text-slate-800 border border-slate-200/80 max-w-[95%]'
+                  }`}
+                >
+                  {msg.text}
+                </div>
+              ))}
+            </div>
+
+            {/* Input Bar with Plus button and Send Plane (Exact INDRA style) */}
+            <form onSubmit={handleSendChat} className="flex items-center gap-2 pt-2 border-t border-slate-200">
+              <button
+                type="button"
+                className="grid size-9 shrink-0 place-items-center rounded-xl border border-slate-200 bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
+                title="Select Intelligence Mode"
+              >
+                <Plus className="size-4" />
+              </button>
+
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  placeholder="Message NER-SARTHI Core..."
+                  className="w-full h-9 rounded-xl border border-slate-200 bg-slate-50 px-3 pr-10 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
+                />
+                <button
+                  type="submit"
+                  className="absolute right-1.5 top-1.5 grid size-6 place-items-center rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                >
+                  <Send className="size-3" />
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/* Circular Floating Assistant Button */}
+        <button
+          type="button"
+          onClick={() => setChatOpen(!chatOpen)}
+          className="grid size-13 place-items-center rounded-full bg-[#0b3d6b] text-white shadow-xl hover:scale-105 transition-transform border-2 border-white"
+          title="Open AI Decision Co-Pilot"
+        >
+          <MessageSquare className="size-6" />
+        </button>
+      </div>
+
+      {/* 
+        ====================================================
+        4. OFFICIAL GOVERNMENT FOOTER
+        ====================================================
+      */}
+      <footer className="mt-16 border-t border-slate-200 bg-white text-slate-600 py-10 px-4 lg:px-8">
+        <div className="mx-auto max-w-[1540px] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-medium">
+          <div className="flex items-center gap-3">
+            <span className="font-black text-slate-900 text-base">NER-SARTHI</span>
+            <span>·</span>
+            <span>Ministry of Development of North Eastern Region (MDoNER)</span>
+          </div>
+
+          <div className="flex items-center gap-4 text-slate-500">
+            <button onClick={() => setSitrepModal(true)} className="hover:text-blue-600">SITREP Dossier</button>
+            <Link to="/corridors" className="hover:text-blue-600">Corridors</Link>
+            <Link to="/fleet" className="hover:text-blue-600">Fleet Telemetry</Link>
+            <Link to="/roles" className="hover:text-blue-600">Role Portals</Link>
+            <Link to="/copilot" className="hover:text-blue-600">Co-Pilot</Link>
           </div>
         </div>
       </footer>
 
-      {/* Emergency Broadcast Modal */}
-      {broadcast && (
-        <div 
-          className="fixed inset-0 z-[100] grid place-items-center bg-slate-950/60 p-4 backdrop-blur-xs" 
-          onMouseDown={e => { if (e.target === e.currentTarget) setBroadcast(false); }}
-        >
-          <div role="dialog" aria-modal="true" className="w-full max-w-lg rounded-xl border border-border bg-card p-6 shadow-2xl animate-fade-in">
-            <div className="flex items-center gap-3 text-amber-600 border-b border-border pb-4">
-              <div className="grid size-10 place-items-center rounded-full bg-amber-500/10">
-                <BellRing className="size-5" />
-              </div>
-              <div>
-                <h2 className="text-lg font-black text-foreground">Emergency Multi-Channel Broadcast</h2>
-                <p className="text-xs text-muted-foreground">Regional Flash Warning System · CAP Protocol v1.2</p>
-              </div>
-            </div>
-
-            <div className="mt-4 space-y-4 text-xs">
-              <div>
-                <label className="font-bold text-foreground">Target Jurisdiction</label>
-                <select className="mt-1.5 w-full rounded-md border border-input bg-background p-2.5 text-xs font-medium">
-                  <option>Dima Hasao & Cachar (Assam) · NH-27 Corridor</option>
-                  <option>East Khasi Hills (Meghalaya) · NH-06 Link</option>
-                  <option>Mangan & North Sikkim · NH-10 Pass</option>
-                  <option>Siliguri Corridor & Gateway Axis</option>
-                  <option>All 8 North Eastern States (Regional Flash)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="font-bold text-foreground">Broadcast Message Draft</label>
-                <textarea 
-                  rows={3} 
-                  defaultValue="CRITICAL ADVISORY: Landslide risk elevated near Jatinga Escarpment (NH-27). Heavy commercial vehicles rerouted via Umrangso. Light vehicles exercise extreme caution. BRO team deployed."
-                  className="mt-1.5 w-full rounded-md border border-input bg-background p-2.5 text-xs font-normal"
-                />
-              </div>
-
-              <div className="grid grid-cols-3 gap-2 py-2">
-                <div className="border border-border rounded p-2 text-center bg-muted/30">
-                  <span className="block font-bold text-foreground">SMS & Cell Broadcast</span>
-                  <span className="text-[10px] text-muted-foreground">34,800 Citizens</span>
-                </div>
-                <div className="border border-border rounded p-2 text-center bg-muted/30">
-                  <span className="block font-bold text-foreground">NavIC Transporters</span>
-                  <span className="text-[10px] text-muted-foreground">1,284 Trucks</span>
-                </div>
-                <div className="border border-border rounded p-2 text-center bg-muted/30">
-                  <span className="block font-bold text-foreground">FM Radio & IVR</span>
-                  <span className="text-[10px] text-muted-foreground">AIR Silchar</span>
-                </div>
-              </div>
-
-              <div className="rounded-md border border-safe/30 bg-safe/5 p-3 text-safe flex items-center gap-2">
-                <ShieldCheck className="size-4 shrink-0" />
-                <span>Sandbox Demonstration: In live deployment, broadcasts are cryptographically signed with eSign.</span>
-              </div>
-            </div>
-
-            <div className="mt-6 flex justify-end gap-2 border-t border-border pt-4">
-              <Button variant="outline" size="sm" onClick={() => setBroadcast(false)}>Cancel</Button>
-              <Button 
-                size="sm" 
-                className="bg-amber-600 hover:bg-amber-700 text-white"
-                onClick={() => {
-                  setBroadcast(false);
-                  window.alert('Emergency Broadcast simulated successfully across Cell Broadcast & NavIC channels!');
-                }}
-              >
-                Send Official Broadcast
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* SITREP Situation Report Modal (Comprehensive Executive Dossier) */}
+      {/* SITREP Executive Dossier Modal */}
       {sitrepModal && (
         <div 
           className="fixed inset-0 z-[100] grid place-items-center bg-slate-950/70 p-4 backdrop-blur-sm overflow-y-auto" 
           onMouseDown={e => { if (e.target === e.currentTarget) setSitrepModal(false); }}
         >
-          <div role="dialog" aria-modal="true" className="w-full max-w-3xl rounded-xl border border-border bg-card p-6 sm:p-8 shadow-2xl animate-fade-in my-8">
-            {/* Gov Header Stripe */}
-            <div className="flex items-center justify-between border-b-2 border-primary/20 pb-4">
-              <div className="flex items-center gap-3">
-                <div className="grid size-12 place-items-center rounded-lg bg-primary/10 text-primary border border-primary/20">
-                  <span className="chakra-mark size-6" />
-                </div>
-                <div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-primary">
-                    Government of India · Ministry of Development of NER
-                  </span>
-                  <h2 className="text-xl font-black text-foreground">Regional Logistics Situation Report (SITREP)</h2>
-                  <p className="text-xs font-mono text-muted-foreground">Dossier ID: MDoNER-GIS-SITREP-2026-0927-1030IST</p>
-                </div>
+          <div role="dialog" aria-modal="true" className="w-full max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-2xl animate-fade-in my-8">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-blue-600">
+                  Government of India · Ministry of Development of NER
+                </span>
+                <h2 className="text-xl font-black text-slate-900">Regional Logistics Situation Report (SITREP)</h2>
+                <p className="text-xs font-mono text-slate-500">Dossier ID: MDoNER-GIS-SITREP-2026-0927-1030IST</p>
               </div>
-              <Button size="icon" variant="ghost" onClick={() => setSitrepModal(false)}>
+              <button onClick={() => setSitrepModal(false)} className="text-slate-400 hover:text-slate-600">
                 <X className="size-5" />
-              </Button>
+              </button>
             </div>
 
-            <div className="mt-5 space-y-4 text-xs leading-relaxed max-h-[65vh] overflow-y-auto pr-2">
-              {/* Executive Overview */}
-              <div className="rounded-lg bg-muted/50 p-4 border border-border">
-                <p className="font-bold text-foreground text-sm">1. Regional Operational Overview (IST 10:30)</p>
-                <p className="mt-1 text-muted-foreground">
-                  All 8 North Eastern states remain operational. 64 districts actively monitored under InSAR slope telemetry and IMD rainfall grids. 6 districts are on elevated disruption exposure with 2 strategic highland corridors operating on active bypass detours. Multi-modal failover conduits (NFR Rail and IWAI NW-2 River Barge) are primed.
+            <div className="mt-5 space-y-4 text-xs leading-relaxed max-h-[60vh] overflow-y-auto pr-2">
+              <div className="rounded-xl bg-slate-50 p-4 border border-slate-200">
+                <p className="font-bold text-slate-900 text-sm">1. Regional Operational Overview (IST 10:30)</p>
+                <p className="mt-1 text-slate-600">
+                  All 8 North Eastern states remain operational. 64 districts actively monitored under InSAR slope telemetry and IMD rainfall grids. 6 districts are on elevated disruption exposure with 2 strategic highland corridors operating on active bypass detours.
                 </p>
               </div>
 
-              {/* Strategic Chokepoints Assessment */}
-              <div className="rounded-lg border border-border p-4">
-                <p className="font-bold text-foreground text-sm">2. Strategic Bottlenecks & Gateways Telemetry</p>
-                <div className="mt-2.5 divide-y divide-border/60">
+              <div className="rounded-xl border border-slate-200 p-4">
+                <p className="font-bold text-slate-900 text-sm mb-2">2. Strategic Bottlenecks Telemetry</p>
+                <div className="divide-y divide-slate-100">
                   {strategicChokepoints.slice(0, 4).map((chk) => (
                     <div key={chk.id} className="py-2 flex items-start justify-between gap-3">
                       <div>
-                        <span className="font-bold text-foreground">{chk.name}</span>
-                        <p className="text-[11px] text-muted-foreground">{chk.description}</p>
-                        <p className="text-[10px] text-primary font-semibold mt-0.5">
-                          ↳ Fallback: {chk.alternativeRoute}
-                        </p>
+                        <span className="font-bold text-slate-900">{chk.name}</span>
+                        <p className="text-[11px] text-slate-500">{chk.description}</p>
                       </div>
-                      <span className={`shrink-0 rounded px-2 py-0.5 text-[10px] font-bold uppercase ${
-                        chk.status === 'High Alert' ? 'bg-critical/10 text-critical' :
-                        chk.status === 'Multi-Modal Shift' ? 'bg-primary/10 text-primary' :
-                        chk.status === 'Congested' ? 'bg-amber-500/10 text-amber-800' : 'bg-safe/10 text-safe'
-                      }`}>
+                      <span className="shrink-0 rounded px-2 py-0.5 text-[10px] font-bold uppercase bg-slate-100 text-slate-700">
                         {chk.status}
                       </span>
                     </div>
                   ))}
                 </div>
               </div>
-
-              {/* Multimodal Redundancy Grid */}
-              <div className="grid sm:grid-cols-2 gap-3">
-                <div className="rounded-lg border border-border p-3.5 bg-card">
-                  <div className="flex items-center gap-2 text-primary font-bold">
-                    <Train className="size-4" />
-                    <span>NFR Freight Railhead Redundancy</span>
-                  </div>
-                  <p className="mt-1 text-[11px] text-muted-foreground">
-                    Lumding–Badarpur Hill Section: 1,400 MT capacity bulk freight shuttle operational. Ro-Ro fuel tankers prioritized.
-                  </p>
-                  <span className="inline-block mt-2 text-[10px] font-bold text-safe bg-safe/10 px-2 py-0.5 rounded">
-                    Active Failover Standby
-                  </span>
-                </div>
-
-                <div className="rounded-lg border border-border p-3.5 bg-card">
-                  <div className="flex items-center gap-2 text-primary font-bold">
-                    <Anchor className="size-4" />
-                    <span>IWAI NW-2 River Barge (Brahmaputra)</span>
-                  </div>
-                  <p className="mt-1 text-[11px] text-muted-foreground">
-                    Pandu Port (Guwahati) to Jogighopa MMLP: 600 MT heavy Ro-Pax barge on 3-hour dispatch alert.
-                  </p>
-                  <span className="inline-block mt-2 text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">
-                    Riverhead Logistics Ready
-                  </span>
-                </div>
-              </div>
-
-              {/* Essential Stockpiles */}
-              <div className="rounded-lg border border-border p-4 bg-muted/30">
-                <p className="font-bold text-foreground text-sm">3. Essential Commodity & Hospital Buffer Status</p>
-                <div className="mt-2 grid grid-cols-3 gap-2 text-center text-xs">
-                  <div className="rounded border border-border bg-card p-2">
-                    <span className="block text-[10px] text-muted-foreground">ICU Oxygen Silchar</span>
-                    <strong className="text-sm font-bold text-safe">99.4% Buffer</strong>
-                  </div>
-                  <div className="rounded border border-border bg-card p-2">
-                    <span className="block text-[10px] text-muted-foreground">Aizawl POL Reserves</span>
-                    <strong className="text-sm font-bold text-amber-700">4.2 Days Stock</strong>
-                  </div>
-                  <div className="rounded border border-border bg-card p-2">
-                    <span className="block text-[10px] text-muted-foreground">FCI Foodgrain Buffer</span>
-                    <strong className="text-sm font-bold text-safe">14 Days Adequate</strong>
-                  </div>
-                </div>
-              </div>
             </div>
 
-            {/* Modal Actions */}
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
-              <span className="text-[11px] text-muted-foreground">
-                Digital Signature: <strong>NER-NDSS-SHA256-AUTH</strong>
-              </span>
-
+            <div className="mt-6 flex items-center justify-between gap-3 border-t border-slate-200 pt-4">
+              <span className="text-[11px] text-slate-400 font-mono">AUTH: NER-NDSS-SHA256-AUTHENTICATED</span>
               <div className="flex items-center gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="text-xs font-semibold"
-                  onClick={handleCopySitrep}
-                >
+                <Button variant="outline" size="sm" onClick={handleCopySitrep}>
                   <Copy className="size-3.5 mr-1" />
-                  {copied ? 'Copied to Clipboard!' : 'Copy SITREP Text'}
+                  {copied ? 'Copied!' : 'Copy SITREP Text'}
                 </Button>
-
-                <Button 
-                  size="sm" 
-                  className="bg-primary text-primary-foreground font-semibold text-xs"
-                  onClick={() => {
-                    window.print();
-                  }}
-                >
-                  <Printer className="size-3.5 mr-1" /> Print / Export PDF
+                <Button size="sm" className="bg-blue-600 text-white font-bold" onClick={() => window.print()}>
+                  <Printer className="size-3.5 mr-1" /> Print PDF
                 </Button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Login / Registration Modal */}
+      {authModal && (
+        <div 
+          className="fixed inset-0 z-[100] grid place-items-center bg-slate-950/60 p-4 backdrop-blur-sm"
+          onMouseDown={e => { if (e.target === e.currentTarget) setAuthModal(null); }}
+        >
+          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl animate-fade-in text-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+              <h3 className="font-black text-base text-slate-900">
+                {authModal === 'login' ? 'Officer & DM Portal Login' : 'National Portal Registration'}
+              </h3>
+              <button onClick={() => setAuthModal(null)} className="text-slate-400 hover:text-slate-600">
+                <X className="size-4" />
+              </button>
+            </div>
+            <div>
+              <label className="font-bold text-slate-700 block mb-1">Official Email / Gov ID</label>
+              <input type="text" defaultValue="officer@mdoner.gov.in" className="w-full h-9 rounded-lg border border-slate-300 px-3 text-xs" />
+            </div>
+            <div>
+              <label className="font-bold text-slate-700 block mb-1">Security PIN / DigiLocker Key</label>
+              <input type="password" defaultValue="••••••••" className="w-full h-9 rounded-lg border border-slate-300 px-3 text-xs" />
+            </div>
+            <Button 
+              className="w-full bg-blue-600 text-white font-bold h-9" 
+              onClick={() => {
+                window.alert('Authenticated via Government of India Single Sign-On (Jan Parichay)!');
+                setAuthModal(null);
+              }}
+            >
+              Authenticate & Enter Desk
+            </Button>
           </div>
         </div>
       )}

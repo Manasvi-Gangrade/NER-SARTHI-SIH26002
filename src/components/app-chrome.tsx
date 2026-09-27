@@ -148,12 +148,12 @@ Authenticated by: National Decision Support System (NER-SARTHI)`;
             <span className="text-slate-300 hidden sm:inline">|</span>
             <span className="hidden sm:flex items-center gap-1">
               <MapPin className="size-3.5 text-red-500" />
-              New Delhi
+              Guwahati · New Delhi (MDoNER)
             </span>
             <span className="text-slate-300 hidden md:inline">|</span>
             <span className="hidden md:flex items-center gap-1 font-semibold text-slate-700">
               <Cloud className="size-3.5 text-sky-500" />
-              26.4°C
+              24.2°C · NER Grid
             </span>
           </div>
 
@@ -180,9 +180,11 @@ Authenticated by: National Decision Support System (NER-SARTHI)`;
                 <option value="English">Select Language</option>
                 <option value="English">English</option>
                 <option value="हिन्दी">हिन्दी (Hindi)</option>
-                <option value="অসমীয়া">অসমীয়া (Assam)</option>
+                <option value="অসমীয়া">অসমীয়া (Assamese)</option>
                 <option value="বাংলা">বাংলা (Bengali)</option>
-                <option value="মৈতৈলোন্">মৈতৈলোন্ (Manipuri)</option>
+                <option value="মৈতৈলোন্">মৈতৈলোন্ (Meitei)</option>
+                <option value="Bodo">बड़ो (Bodo)</option>
+                <option value="Mizo">Mizo ṭawng</option>
               </select>
             </div>
 
@@ -206,7 +208,7 @@ Authenticated by: National Decision Support System (NER-SARTHI)`;
               className="h-9 rounded-lg bg-[#059669] hover:bg-emerald-700 text-white font-bold text-xs uppercase px-3.5 sm:px-4 shadow-xs"
               onClick={() => setSitrepModal(true)}
             >
-              REGISTRATION
+              SITREP REPORT
             </Button>
 
             {/* Login Royal Blue Pill */}
@@ -271,13 +273,13 @@ Authenticated by: National Decision Support System (NER-SARTHI)`;
           {/* Marquee Text */}
           <div className="overflow-hidden whitespace-nowrap flex-1">
             <div className="marquee-track inline-block text-[11.5px] font-medium text-white tracking-wide">
-              <span className="mx-4 font-bold">DM offices in UP & NER [Status: Running]</span>
-              <span className="mx-4 font-bold">• ECONOMY: Q3 GDP Growth recorded at 7.2% — RBI integration stable [Confidence: 98%]</span>
-              <span className="mx-4 font-bold">• VOICE: Processed 45K citizen grievance calls today — Hindi, Assamese & Marathi</span>
-              <span className="mx-4 font-bold">• NH-27 ALERT: High Landslide Probability at KM 148 Jatinga Slump [Confidence: 94%] — Heavy vehicles diverted to Umrangso</span>
-              <span className="mx-4 font-bold">• CHOKEPOINT: Siliguri Corridor ("Chicken's Neck") processing 4,200 commercial trucks with 0 bottleneck delay</span>
-              <span className="mx-4 font-bold">• SIKKIM: Single-lane clearance on NH-10 at 29th Mile with BRO Project Swastik escort</span>
-              <span className="mx-4 font-bold">• MULTI-MODAL: NFR Railhead Ro-Ro & IWAI National Waterway-2 River Barge on active standby</span>
+              <span className="mx-4 font-bold">MDoNER LOGISTICS COMMAND: 64 Hill & Valley Districts Active Under InSAR Landslide Monitoring Grid</span>
+              <span className="mx-4 font-bold">• NH-27 DIMA HASAO: High Landslide Probability at KM 148 Jatinga Slump [Risk: 86/100, BVS: 0.85] — Heavy POL trucks routed via Umrangso Bypass</span>
+              <span className="mx-4 font-bold">• SILIGURI CORRIDOR ("CHICKEN'S NECK"): 22km Gateway Active · 4,200 Freight Convoys Paced at Srirampur & Boxirhat Entry Gates</span>
+              <span className="mx-4 font-bold">• SIKKIM LIFELINE: NH-10 Teesta Corridor clearance underway at 29th Mile with BRO Project Swastik Heavy Earthmovers</span>
+              <span className="mx-4 font-bold">• MULTIMODAL WATERWAY FALLBACK: IWAI National Waterway-2 (Brahmaputra) Ro-Pax Barge active for Majuli Island & Silchar relief</span>
+              <span className="mx-4 font-bold">• RAILHEAD INTERMODAL: NFR Lumding-Badarpur Hill Section flatbed freight rakes standing by for essential grain & diesel</span>
+              <span className="mx-4 font-bold">• BHASHINI ACCESSIBILITY: 230+ Regional Dialects Active across Offline Field App & Toll-Free Citizen IVRS</span>
             </div>
           </div>
         </div>

@@ -89,90 +89,120 @@ function INDRACommandCenter() {
             {/* LEFT COLUMN: Huge Bold Heading, Subtitle & 4 Crisis Cards */}
             <div className="lg:col-span-7 space-y-6">
               <div>
-                <h1 className="text-4xl sm:text-5xl lg:text-[62px] font-black tracking-tight text-slate-900 leading-[1.1]">
-                  NER-SARTHI: Where India’s data becomes{' '}
-                  <span className="text-[#2563eb]">India’s decisions.</span>
+                <h1 className="text-4xl sm:text-5xl lg:text-[54px] font-black tracking-tight text-slate-900 leading-[1.12]">
+                  NER-SARTHI: Smart Logistics & Accessibility Intelligence for the{' '}
+                  <span className="text-[#2563eb]">North Eastern Region</span>
                 </h1>
                 
-                <p className="mt-5 text-base sm:text-lg leading-relaxed text-slate-600 max-w-2xl font-normal">
-                  A unified AI platform converting massive terrain and logistics data into actionable intelligence, empowering leaders with real-time insights and unparalleled citizen connection at scale.
+                <p className="mt-4 text-base sm:text-lg leading-relaxed text-slate-600 max-w-2xl font-normal">
+                  A unified AI decision-support platform fusing real-time weather intelligence, satellite radar, NavIC telemetry, and field reporting across all 8 North Eastern states — predicting road collapse, flood washouts, and lifeline disruption before they happen.
                 </p>
               </div>
 
-              {/* 4 Crisis Thumbnail Cards (Exact INDRA style) */}
+              {/* 4 Crisis Thumbnail Cards (Exact INDRA style, 100% NER Grounded) */}
               <div className="pt-2">
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                  {/* Card 1: Assam Flood Crisis */}
+                  {/* Card 1: Dima Hasao Jatinga Slump */}
                   <div className="rounded-lg border border-slate-200 bg-white overflow-hidden shadow-2xs group hover:shadow-md transition-all">
                     <div className="bg-[#b91c1c] text-white text-[8px] font-black px-1.5 py-0.5 uppercase tracking-wider text-center truncate">
-                      ASSAM FLOOD CRISIS
+                      DIMA HASAO · NH-27
                     </div>
                     <div className="h-20 bg-slate-100 relative overflow-hidden flex items-center justify-center p-1">
                       <div className="grid grid-cols-2 gap-0.5 w-full h-full">
-                        <div className="bg-sky-200 rounded-2xs flex items-center justify-center text-[9px] font-bold text-sky-800">
-                          🌊 Floods
+                        <div className="bg-red-100 rounded-2xs flex items-center justify-center text-[8.5px] font-bold text-red-800 text-center p-0.5">
+                          ⚠️ 86/100 Risk
                         </div>
-                        <div className="bg-orange-200 rounded-2xs flex items-center justify-center text-[9px] font-bold text-orange-800">
-                          🛶 Rescue
+                        <div className="bg-sky-100 rounded-2xs flex items-center justify-center text-[8.5px] font-bold text-sky-800 text-center p-0.5">
+                          🌧️ 124mm Rain
                         </div>
-                        <div className="bg-slate-300 rounded-2xs flex items-center justify-center text-[9px] font-bold text-slate-800">
-                          🏘️ Submerged
+                        <div className="bg-amber-100 rounded-2xs flex items-center justify-center text-[8.5px] font-bold text-amber-800 text-center p-0.5">
+                          🪨 Soil Slump
                         </div>
-                        <div className="bg-blue-300 rounded-2xs flex items-center justify-center text-[9px] font-bold text-blue-900">
-                          🛰️ Radar
+                        <div className="bg-blue-100 rounded-2xs flex items-center justify-center text-[8.5px] font-bold text-blue-900 text-center p-0.5">
+                          🚜 BRO Unit
                         </div>
                       </div>
                     </div>
                     <div className="p-1.5 text-center bg-slate-50 border-t border-slate-100">
-                      <span className="text-[9px] font-bold text-slate-700 block truncate">Displaced Population</span>
+                      <span className="text-[9px] font-bold text-slate-700 block truncate">Jatinga Slump (Barak Cutoff)</span>
                     </div>
                   </div>
 
-                  {/* Card 2: Kerala Floods 2018 */}
+                  {/* Card 2: Sikkim NH-10 Teesta Collapse */}
                   <div className="rounded-lg border border-slate-200 bg-white overflow-hidden shadow-2xs group hover:shadow-md transition-all">
                     <div className="bg-slate-800 text-white text-[8px] font-black px-1.5 py-0.5 uppercase tracking-wider text-center truncate">
-                      KERALA FLOODS 2018
+                      SIKKIM · NH-10
                     </div>
                     <div className="h-20 bg-slate-100 relative overflow-hidden flex items-center justify-center p-1 bg-gradient-to-br from-slate-200 to-sky-100">
-                      <div className="text-center">
-                        <span className="text-xl block">🚤</span>
-                        <span className="text-[9px] font-extrabold text-slate-700">Evacuation Lag</span>
+                      <div className="grid grid-cols-2 gap-0.5 w-full h-full">
+                        <div className="bg-blue-100 rounded-2xs flex items-center justify-center text-[8.5px] font-bold text-blue-800 text-center p-0.5">
+                          🌊 Teesta Surge
+                        </div>
+                        <div className="bg-stone-200 rounded-2xs flex items-center justify-center text-[8.5px] font-bold text-stone-800 text-center p-0.5">
+                          🪨 29th Mile
+                        </div>
+                        <div className="bg-red-100 rounded-2xs flex items-center justify-center text-[8.5px] font-bold text-red-800 text-center p-0.5">
+                          📍 Mangan Cut
+                        </div>
+                        <div className="bg-emerald-100 rounded-2xs flex items-center justify-center text-[8.5px] font-bold text-emerald-900 text-center p-0.5">
+                          🛡️ Swastik Unit
+                        </div>
                       </div>
                     </div>
                     <div className="p-1.5 text-center bg-slate-50 border-t border-slate-100">
-                      <span className="text-[9px] font-bold text-slate-700 block truncate">Rescue Response Delayed</span>
+                      <span className="text-[9px] font-bold text-slate-700 block truncate">Teesta Basin Washout</span>
                     </div>
                   </div>
 
-                  {/* Card 3: Grievance Portals */}
+                  {/* Card 3: Majuli Island Riverine Flood */}
                   <div className="rounded-lg border border-slate-200 bg-white overflow-hidden shadow-2xs group hover:shadow-md transition-all">
                     <div className="bg-[#b91c1c] text-white text-[8px] font-black px-1.5 py-0.5 uppercase tracking-wider text-center truncate">
-                      GOV GRIEVANCE PORTALS
+                      MAJULI ISLAND
                     </div>
                     <div className="h-20 bg-slate-100 relative overflow-hidden flex items-center justify-center p-1 bg-gradient-to-br from-amber-50 to-orange-100">
-                      <div className="text-center">
-                        <span className="text-xl block">📋</span>
-                        <span className="text-[9px] font-extrabold text-amber-900">45,000+ Backlog</span>
+                      <div className="grid grid-cols-2 gap-0.5 w-full h-full">
+                        <div className="bg-sky-200 rounded-2xs flex items-center justify-center text-[8.5px] font-bold text-sky-900 text-center p-0.5">
+                          🚢 NW-2 RoPax
+                        </div>
+                        <div className="bg-red-100 rounded-2xs flex items-center justify-center text-[8.5px] font-bold text-red-800 text-center p-0.5">
+                          🌊 River +1.4m
+                        </div>
+                        <div className="bg-amber-100 rounded-2xs flex items-center justify-center text-[8.5px] font-bold text-amber-800 text-center p-0.5">
+                          📦 Buffer Stock
+                        </div>
+                        <div className="bg-teal-100 rounded-2xs flex items-center justify-center text-[8.5px] font-bold text-teal-900 text-center p-0.5">
+                          🏝️ Island Dep.
+                        </div>
                       </div>
                     </div>
                     <div className="p-1.5 text-center bg-slate-50 border-t border-slate-100">
-                      <span className="text-[9px] font-bold text-slate-700 block truncate">Overwhelmed Systems</span>
+                      <span className="text-[9px] font-bold text-slate-700 block truncate">Brahmaputra Flood Isolation</span>
                     </div>
                   </div>
 
-                  {/* Card 4: Isolated Mountain Tribes */}
+                  {/* Card 4: Siliguri 22km Gateway */}
                   <div className="rounded-lg border border-slate-200 bg-white overflow-hidden shadow-2xs group hover:shadow-md transition-all">
                     <div className="bg-emerald-800 text-white text-[8px] font-black px-1.5 py-0.5 uppercase tracking-wider text-center truncate">
-                      ISOLATED HILL LOGISTICS
+                      SILIGURI CORRIDOR
                     </div>
                     <div className="h-20 bg-slate-100 relative overflow-hidden flex items-center justify-center p-1 bg-gradient-to-br from-emerald-50 to-teal-100">
-                      <div className="text-center">
-                        <span className="text-xl block">🏔️</span>
-                        <span className="text-[9px] font-extrabold text-emerald-900">Zero Road Connectivity</span>
+                      <div className="grid grid-cols-2 gap-0.5 w-full h-full">
+                        <div className="bg-emerald-100 rounded-2xs flex items-center justify-center text-[8.5px] font-bold text-emerald-900 text-center p-0.5">
+                          🚛 4,200 Trucks
+                        </div>
+                        <div className="bg-blue-100 rounded-2xs flex items-center justify-center text-[8.5px] font-bold text-blue-900 text-center p-0.5">
+                          ⚡ 22km Neck
+                        </div>
+                        <div className="bg-purple-100 rounded-2xs flex items-center justify-center text-[8.5px] font-bold text-purple-900 text-center p-0.5">
+                          📡 NavIC Paced
+                        </div>
+                        <div className="bg-slate-200 rounded-2xs flex items-center justify-center text-[8.5px] font-bold text-slate-800 text-center p-0.5">
+                          🏛️ Srirampur
+                        </div>
                       </div>
                     </div>
                     <div className="p-1.5 text-center bg-slate-50 border-t border-slate-100">
-                      <span className="text-[9px] font-bold text-slate-700 block truncate">Highland Ration Drops</span>
+                      <span className="text-[9px] font-bold text-slate-700 block truncate">Chicken's Neck Gateway</span>
                     </div>
                   </div>
                 </div>
@@ -185,10 +215,10 @@ function INDRACommandCenter() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-red-600 text-sm font-black">▶</span>
-                  <h2 className="text-base font-black text-slate-900 tracking-tight">Live Threat & News Feeds</h2>
+                  <h2 className="text-base font-black text-slate-900 tracking-tight">Live Disruption & Logistics Radar</h2>
                 </div>
                 <span className="rounded-full bg-red-100 text-red-700 text-[10px] font-black px-2.5 py-0.5 tracking-wider border border-red-200">
-                  LIVE FEED
+                  LIVE RADAR
                 </span>
               </div>
 
@@ -198,25 +228,32 @@ function INDRACommandCenter() {
                 <div className="relative aspect-video w-full bg-gradient-to-b from-slate-900 via-slate-800 to-black overflow-hidden flex flex-col justify-between p-3">
                   {/* Top Bar inside Video */}
                   <div className="flex items-center justify-between z-10">
-                    <span className="bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded flex items-center gap-1">
+                    <span className="bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded flex items-center gap-1.5">
                       <span className="size-1.5 rounded-full bg-white animate-ping" />
-                      ABP NEWS LIVE
+                      DD NORTH EAST LIVE
                     </span>
 
                     <span className="bg-black/70 backdrop-blur-xs text-white text-[10px] font-bold px-2 py-0.5 rounded border border-white/20">
-                      WAR BREAKING
+                      MDoNER SITREP DESK
                     </span>
                   </div>
 
                   {/* Center Visual: Simulated Radar & News Graphics */}
-                  <div className="my-auto text-center space-y-1 z-10">
-                    <div className="inline-block rounded-lg bg-black/60 backdrop-blur-md px-3 py-1 border border-white/10">
-                      <span className="text-xs font-black text-amber-400 uppercase tracking-widest block">
-                        साम दाम दंड भेद · महायुद्ध BREAKING
+                  <div className="my-auto text-center space-y-1.5 z-10">
+                    <div className="inline-block rounded-xl bg-black/70 backdrop-blur-md px-3.5 py-2 border border-white/15 max-w-[92%]">
+                      <span className="text-[10px] font-black text-amber-400 uppercase tracking-widest block mb-0.5">
+                        GEOLOGICAL RADAR & ROAD CLEARANCE · CAM-DH4
                       </span>
-                      <span className="text-sm sm:text-base font-black text-white">
-                        पूर्वोत्तर व सीमावर्ती राज्यों में रडार व रसद सुरक्षा अलर्ट
+                      <span className="text-xs sm:text-sm font-black text-white block">
+                        NH-27 KM 148 Jatinga Slump: BRO Swastik Excavator Teams Deployed
                       </span>
+                      <div className="mt-1 flex items-center justify-center gap-2 text-[9.5px] text-slate-300 font-mono">
+                        <span className="text-red-400 font-bold">Rain: 52mm/hr</span>
+                        <span>•</span>
+                        <span className="text-amber-300 font-bold">Soil Slip: +4.8mm/hr</span>
+                        <span>•</span>
+                        <span className="text-emerald-400 font-bold">Umrangso Bypass Active</span>
+                      </div>
                     </div>
                   </div>
 
@@ -224,17 +261,17 @@ function INDRACommandCenter() {
                   <div className="z-10 space-y-2 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-2 rounded-lg">
                     {/* Scrub Bar */}
                     <div className="h-1 w-full bg-slate-700 rounded-full overflow-hidden">
-                      <div className="h-full bg-red-600 rounded-full w-[35%]" />
+                      <div className="h-full bg-red-600 rounded-full w-[45%]" />
                     </div>
 
                     <div className="flex items-center justify-between text-xs text-slate-300">
                       <div className="flex items-center gap-3">
-                        <button onClick={() => setVideoPlaying(!videoPlaying)} className="hover:text-white">
+                        <button onClick={() => setVideoPlaying(!videoPlaying)} className="hover:text-white" aria-label={videoPlaying ? "Pause Video" : "Play Video"}>
                           {videoPlaying ? <Pause className="size-4" /> : <Play className="size-4" />}
                         </button>
-                        <button className="hover:text-white"><SkipBack className="size-3.5" /></button>
-                        <button className="hover:text-white"><SkipForward className="size-3.5" /></button>
-                        <span className="font-mono text-[10px]">0:11 / 35:45</span>
+                        <button className="hover:text-white" aria-label="Rewind"><SkipBack className="size-3.5" /></button>
+                        <button className="hover:text-white" aria-label="Fast Forward"><SkipForward className="size-3.5" /></button>
+                        <span className="font-mono text-[10px]">09:14:22 IST · 24/7 BROADCAST</span>
                       </div>
 
                       <div className="flex items-center gap-2">
@@ -248,42 +285,42 @@ function INDRACommandCenter() {
                 </div>
 
                 {/* Bottom Breaking Text Marquee on Video Card */}
-                <div className="bg-[#991b1b] text-white px-3 py-1 text-[11px] font-bold flex items-center gap-2">
+                <div className="bg-[#991b1b] text-white px-3 py-1.5 text-[11px] font-bold flex items-center gap-2">
                   <span className="bg-red-700 px-1.5 py-0.2 rounded text-[9px] uppercase font-black">BREAKING</span>
                   <span className="truncate">
-                    सेना और बीआरओ की संयुक्त टीमें मुस्तैद · असम-मेघालय में लाइफलाइन कॉरिडोर्स पर ग्रीन रूट लागू
+                    BRO TASKFORCE CLEARING 29TH MILE TEESTA · POL FUEL CONVOY 41 ACTIVE VIA UMRANGSO · 230+ DIALECT CITIZEN HELPLINE LIVE
                   </span>
                 </div>
               </div>
 
-              {/* Two Bottom Secondary News Thumbnails (Exact INDRA style) */}
+              {/* Two Bottom Secondary News Thumbnails (Exact INDRA style, 100% NER) */}
               <div className="grid grid-cols-2 gap-3">
-                {/* Left: Aaj Tak */}
+                {/* Left: Pratidin Time / News18 Assam-NE */}
                 <div className="rounded-xl border border-slate-200 bg-white p-2.5 shadow-2xs space-y-1.5">
                   <div className="flex items-center justify-between">
                     <span className="bg-red-600 text-white text-[9px] font-black px-1.5 py-0.2 rounded">
-                      ● AAJ TAK
+                      ● PRATIDIN TIME
                     </span>
-                    <span className="text-[9px] font-bold text-slate-400">GROUND SITREP</span>
+                    <span className="text-[9px] font-bold text-slate-400">DISPATCH DESK</span>
                   </div>
                   <div className="h-16 rounded bg-slate-100 flex items-center justify-center text-center p-1 bg-gradient-to-r from-red-50 to-orange-50 border border-slate-100">
                     <span className="text-[10px] font-bold text-slate-800 leading-tight">
-                      खास खबर: राहत दल व एनडीआरएफ की टीमें तैनात
+                      Jogighopa MMLP: 40-tonne FCI rice barges dispatched via NW-2 Brahmaputra
                     </span>
                   </div>
                 </div>
 
-                {/* Right: NDTV India */}
+                {/* Right: ISRO Bhuvan / GSI Bhusanket */}
                 <div className="rounded-xl border border-slate-200 bg-white p-2.5 shadow-2xs space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="bg-red-700 text-white text-[9px] font-black px-1.5 py-0.2 rounded">
-                      ● NDTV INDIA
+                    <span className="bg-blue-700 text-white text-[9px] font-black px-1.5 py-0.2 rounded">
+                      🛰️ ISRO BHUVAN
                     </span>
-                    <span className="text-[9px] font-bold text-slate-400">SATELLITE RADAR</span>
+                    <span className="text-[9px] font-bold text-slate-400">GSI BHUSANKET</span>
                   </div>
                   <div className="h-16 rounded bg-slate-100 flex items-center justify-center text-center p-1 bg-gradient-to-r from-sky-50 to-blue-50 border border-slate-100">
                     <span className="text-[10px] font-bold text-slate-800 leading-tight">
-                      सैटेलाइट मौसम रडार: भारी बारिश व भूस्खलन चेतावनी
+                      National Landslide Early Warning active across 6 Sikkim districts (Mangan, Pakyong)
                     </span>
                   </div>
                 </div>
@@ -303,29 +340,33 @@ function INDRACommandCenter() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Card 1: Teal / Emerald */}
           <div className="rounded-2xl p-5 bg-[#0d9488] text-white shadow-md hover:scale-[1.02] transition-transform cursor-pointer">
+            <span className="text-[10px] font-black uppercase tracking-wider text-teal-200 block mb-1">MDoNER SCHEME MONITOR</span>
             <h3 className="font-extrabold text-sm sm:text-base leading-snug">
-              Global Tech Sync: NER-SARTHI Core Finalizes Ontology Integration
+              NESIDS Mission Sync: ₹8,139.50 Cr Outlay Monitored Across 90 Projects in All 8 NER States
             </h3>
           </div>
 
           {/* Card 2: Amber / Orange */}
           <div className="rounded-2xl p-5 bg-[#ea580c] text-white shadow-md hover:scale-[1.02] transition-transform cursor-pointer">
+            <span className="text-[10px] font-black uppercase tracking-wider text-orange-200 block mb-1">INTERMODAL LOGISTICS</span>
             <h3 className="font-extrabold text-sm sm:text-base leading-snug">
-              Sovereign Cloud: New Data Centers Live In Guwahati & Shillong Hubs
+              PM GatiShakti Multimodal: NW-2 Brahmaputra Barge + NFR Railhead Fallback Activated
             </h3>
           </div>
 
           {/* Card 3: Royal Purple */}
           <div className="rounded-2xl p-5 bg-[#7c3aed] text-white shadow-md hover:scale-[1.02] transition-transform cursor-pointer">
+            <span className="text-[10px] font-black uppercase tracking-wider text-purple-200 block mb-1">EARLY WARNING SYSTEM</span>
             <h3 className="font-extrabold text-sm sm:text-base leading-snug">
-              National High-Alert: Security & Multi-Modal Protocols Updated at All Hubs
+              GSI Bhusanket LEWS: Automated 15-Minute Landslide Threshold Alerting in High-Risk Zones
             </h3>
           </div>
 
           {/* Card 4: Magenta / Fuchsia */}
           <div className="rounded-2xl p-5 bg-[#c026d3] text-white shadow-md hover:scale-[1.02] transition-transform cursor-pointer">
+            <span className="text-[10px] font-black uppercase tracking-wider text-fuchsia-200 block mb-1">LIFELINE ASSURANCE</span>
             <h3 className="font-extrabold text-sm sm:text-base leading-snug">
-              Economic Resilience: India's Mountain Trade Continuity Reaches Record High
+              Zero-Shortage Logistics: 100% Critical Hospital Oxygen & Essential Grain Tracked via NavIC
             </h3>
           </div>
         </div>
@@ -345,7 +386,7 @@ function INDRACommandCenter() {
           <div className="w-24 h-0.5 bg-slate-300 mx-auto" />
         </div>
 
-        {/* 3 Giant Pill Cards (from INDRA indra_core_hubs_cards_1790488828773.png) */}
+        {/* 3 Giant Pill Cards (from INDRA style, 100% grounded in NER-SARTHI) */}
         <div className="space-y-4 max-w-4xl mx-auto">
           {/* Hub 1: COMMAND CENTER (Royal Blue) */}
           <button
@@ -355,13 +396,16 @@ function INDRACommandCenter() {
               const el = document.getElementById('dashboard-view');
               if (el) el.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="w-full h-24 sm:h-28 rounded-3xl bg-[#2563eb] hover:bg-[#1d4ed8] text-white shadow-lg flex flex-col items-center justify-center relative overflow-hidden group transition-all"
+            className="w-full h-24 sm:h-28 rounded-3xl bg-[#0b3d6b] hover:bg-[#072c4f] text-white shadow-lg flex flex-col items-center justify-center relative overflow-hidden group transition-all"
           >
             <Sparkles className="absolute top-4 right-6 size-5 text-white/40 group-hover:text-white transition-colors" />
             <span className="text-xl sm:text-2xl font-black uppercase tracking-wider">
               COMMAND CENTER
             </span>
-            <div className="w-12 h-1 bg-white/40 rounded-full mt-2 group-hover:w-16 transition-all" />
+            <span className="text-[11px] font-semibold text-sky-200 tracking-wide mt-0.5">
+              Eight-State GIS Telemetry & Strategic Chokepoint Grid
+            </span>
+            <div className="w-12 h-1 bg-white/40 rounded-full mt-2 group-hover:w-20 transition-all" />
           </button>
 
           {/* Hub 2: LEADER PILOT (Vibrant Purple) */}
@@ -378,7 +422,10 @@ function INDRACommandCenter() {
             <span className="text-xl sm:text-2xl font-black uppercase tracking-wider">
               LEADER PILOT
             </span>
-            <div className="w-12 h-1 bg-white/40 rounded-full mt-2 group-hover:w-16 transition-all" />
+            <span className="text-[11px] font-semibold text-purple-200 tracking-wide mt-0.5">
+              RAG Decision Intelligence & Natural Language Query Assistant
+            </span>
+            <div className="w-12 h-1 bg-white/40 rounded-full mt-2 group-hover:w-20 transition-all" />
           </button>
 
           {/* Hub 3: VOICE OUTREACH (Emerald Green) */}
@@ -395,7 +442,10 @@ function INDRACommandCenter() {
             <span className="text-xl sm:text-2xl font-black uppercase tracking-wider">
               VOICE OUTREACH
             </span>
-            <div className="w-12 h-1 bg-white/40 rounded-full mt-2 group-hover:w-16 transition-all" />
+            <span className="text-[11px] font-semibold text-emerald-200 tracking-wide mt-0.5">
+              Bhashini 230+ Regional Dialects & Offline Driver App
+            </span>
+            <div className="w-12 h-1 bg-white/40 rounded-full mt-2 group-hover:w-20 transition-all" />
           </button>
         </div>
       </section>

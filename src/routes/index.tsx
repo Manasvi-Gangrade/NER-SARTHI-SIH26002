@@ -408,14 +408,9 @@ function INDRACommandCenter() {
             <div className="w-12 h-1 bg-white/40 rounded-full mt-2 group-hover:w-20 transition-all" />
           </button>
 
-          {/* Hub 2: LEADER PILOT (Vibrant Purple) */}
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedHub('pilot');
-              const el = document.getElementById('copilot-section');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}
+          {/* Hub 2: LEADER PILOT (Vibrant Purple) - Direct Module Link */}
+          <Link
+            to="/copilot"
             className="w-full h-24 sm:h-28 rounded-3xl bg-[#7c3aed] hover:bg-[#6d28d9] text-white shadow-lg flex flex-col items-center justify-center relative overflow-hidden group transition-all"
           >
             <Sparkles className="absolute top-4 right-6 size-5 text-white/40 group-hover:text-white transition-colors" />
@@ -423,19 +418,14 @@ function INDRACommandCenter() {
               LEADER PILOT
             </span>
             <span className="text-[11px] font-semibold text-purple-200 tracking-wide mt-0.5">
-              RAG Decision Intelligence & Natural Language Query Assistant
+              Launch RAG Decision Intelligence & Natural Language Query Assistant →
             </span>
             <div className="w-12 h-1 bg-white/40 rounded-full mt-2 group-hover:w-20 transition-all" />
-          </button>
+          </Link>
 
-          {/* Hub 3: VOICE OUTREACH (Emerald Green) */}
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedHub('voice');
-              const el = document.getElementById('voice-section');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}
+          {/* Hub 3: VOICE OUTREACH (Emerald Green) - Direct Module Link */}
+          <Link
+            to="/citizen"
             className="w-full h-24 sm:h-28 rounded-3xl bg-[#059669] hover:bg-[#047857] text-white shadow-lg flex flex-col items-center justify-center relative overflow-hidden group transition-all"
           >
             <Sparkles className="absolute top-4 right-6 size-5 text-white/40 group-hover:text-white transition-colors" />
@@ -443,10 +433,10 @@ function INDRACommandCenter() {
               VOICE OUTREACH
             </span>
             <span className="text-[11px] font-semibold text-emerald-200 tracking-wide mt-0.5">
-              Bhashini 230+ Regional Dialects & Offline Driver App
+              Launch Bhashini 230+ Regional Dialects & Offline Driver App →
             </span>
             <div className="w-12 h-1 bg-white/40 rounded-full mt-2 group-hover:w-20 transition-all" />
-          </button>
+          </Link>
         </div>
       </section>
 
@@ -649,199 +639,186 @@ function INDRACommandCenter() {
 
       {/* 
         ====================================================
-        8. FLEET TELEMETRY & CONVOY RADAR
+        8. ENTERPRISE OPERATIONAL MODULES DIRECTORY
+        (Clear Multi-Page Application Architecture)
         ====================================================
       */}
-      <section className="mx-auto max-w-[1540px] px-4 lg:px-8 space-y-4">
-        <div className="panel overflow-hidden border border-slate-200 bg-white">
-          <div className="border-b border-slate-200 bg-slate-50 px-4 py-3 flex items-center justify-between">
-            <div>
-              <span className="text-[10px] font-bold uppercase text-slate-500">Active Mountain Logistics</span>
-              <h3 className="text-sm font-bold text-slate-900">Priority Convoy Telemetry & Satellite Dispatch</h3>
-            </div>
-            <Button asChild variant="outline" size="sm" className="text-xs font-bold">
-              <Link to="/fleet">View All Convoys <ArrowRight className="size-3.5 ml-1" /></Link>
-            </Button>
-          </div>
-          <FleetTable rows={vehicles.slice(0, 5)} />
-        </div>
-      </section>
-
-      {/* 
-        ====================================================
-        9. AI DECISION CO-PILOT WORKBENCH (LEADER PILOT)
-        ====================================================
-      */}
-      <section id="copilot-section" className="mx-auto max-w-[1540px] px-4 lg:px-8 space-y-4">
-        <div className="flex items-center justify-between">
+      <section className="mx-auto max-w-[1540px] px-4 lg:px-8 space-y-6 pt-4">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-slate-200 pb-4">
           <div>
-            <span className="section-kicker">Grounded Decision Intelligence</span>
-            <h2 className="text-2xl font-black text-slate-900">Leader Pilot: AI Decision Engine</h2>
-          </div>
-          <Button asChild variant="outline" size="sm" className="text-xs font-bold">
-            <Link to="/copilot">Open Full AI Desk <ArrowRight className="size-3 ml-1" /></Link>
-          </Button>
-        </div>
-
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(300px,0.8fr)]">
-          {/* Chat / Briefing Console */}
-          <div className="panel overflow-hidden flex flex-col border border-slate-200 bg-white">
-            <div className="flex items-center justify-between border-b border-slate-200 bg-[#2563eb] px-5 py-3.5 text-white">
-              <div className="flex items-center gap-2.5">
-                <div className="grid size-7 place-items-center rounded bg-white/10 text-white">
-                  <Bot className="size-4" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold">Ask NER-SARTHI Strategic Co-Pilot</h3>
-                  <p className="text-[10px] text-white/80">RAG Grounded Intelligence · Physics & Terrain Validated</p>
-                </div>
-              </div>
-              <span className="rounded bg-white/20 px-2 py-0.5 text-[10px] font-extrabold uppercase">
-                SLM Active
-              </span>
-            </div>
-
-            {/* Conversation Window */}
-            <div className="flex-1 bg-slate-50/60 p-5 space-y-4 min-h-[300px]">
-              <div className="ml-auto w-fit max-w-[85%] rounded-2xl bg-blue-600 p-3.5 text-xs sm:text-sm text-white shadow-xs font-medium">
-                {activeCopilotQuery.q}
-              </div>
-
-              {copilotLoading ? (
-                <div className="flex items-center gap-1.5 rounded-2xl border border-slate-200 bg-white p-4 w-fit shadow-xs">
-                  <span className="typing-dot" />
-                  <span className="typing-dot delay-1" />
-                  <span className="typing-dot delay-2" />
-                  <span className="text-xs text-slate-500 font-semibold ml-2">Synthesizing terrain & convoy telemetry...</span>
-                </div>
-              ) : (
-                <div className="max-w-[96%] rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-3 animate-fade-in">
-                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
-                    <span className="flex items-center gap-1.5 text-xs font-bold text-blue-600">
-                      <Sparkles className="size-4" />
-                      Executive Situation Intelligence
-                    </span>
-                    <span className="rounded bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
-                      {activeCopilotQuery.confidence}% Grounded Confidence
-                    </span>
-                  </div>
-
-                  <p className="text-xs sm:text-sm leading-relaxed text-slate-800">
-                    {activeCopilotQuery.answer}
-                  </p>
-
-                  <div className="rounded-xl border-l-4 border-amber-500 bg-amber-50 p-3 text-xs text-amber-900">
-                    <b className="font-bold">Recommended Action: </b>
-                    {activeCopilotQuery.action}
-                  </div>
-
-                  <div className="pt-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1.5">
-                      Audited Data Citations:
-                    </span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {activeCopilotQuery.sources.map((src) => (
-                        <Source key={src}>{src}</Source>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Custom Input Form */}
-            <form onSubmit={handleCustomSubmit} className="flex gap-2 border-t border-slate-200 bg-white p-3">
-              <input
-                type="text"
-                value={customQuery}
-                onChange={(e) => setCustomQuery(e.target.value)}
-                placeholder="Ask about mountain routes, medical convoys, rainfall or district stock..."
-                className="h-10 flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs outline-none focus:ring-1 focus:ring-blue-600"
-              />
-              <Button type="submit" size="sm" className="font-bold text-xs h-10 px-4 bg-blue-600 text-white hover:bg-blue-700">
-                Inquire
-              </Button>
-            </form>
-          </div>
-
-          {/* Quick Preset Queries */}
-          <div className="space-y-4">
-            <article className="panel p-4 border border-slate-200 bg-white">
-              <span className="section-kicker">Quick Strategic Inquiries</span>
-              <h3 className="text-sm font-bold text-slate-900 mb-3">Pre-Grounded Scenarios</h3>
-              <div className="space-y-2">
-                {aiQueries.map((q) => (
-                  <Button
-                    key={q.q}
-                    variant={activeCopilotQuery.q === q.q ? 'secondary' : 'outline'}
-                    size="sm"
-                    className="h-auto w-full justify-start py-2.5 px-3 text-left text-xs font-semibold whitespace-normal border-slate-200 hover:bg-slate-100"
-                    onClick={() => handleAskCopilot(q)}
-                  >
-                    <ChevronRight className="size-3.5 mr-1 shrink-0 text-blue-600" />
-                    <span>{q.q}</span>
-                  </Button>
-                ))}
-              </div>
-            </article>
+            <span className="section-kicker">System Architecture & Workspaces</span>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              Dedicated Operational Desks & Modules
+            </h2>
+            <p className="text-sm text-slate-500 mt-1 max-w-3xl">
+              NER-SARTHI is organized into distinct specialized command modules for highway engineers, logistics dispatchers, district magistrates, field officers, and citizens.
+            </p>
           </div>
         </div>
-      </section>
 
-      {/* 
-        ====================================================
-        10. VOICE OUTREACH & CITIZEN MOBILE DESK
-        ====================================================
-      */}
-      <section id="voice-section" className="mx-auto max-w-[1540px] px-4 lg:px-8 space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <span className="section-kicker">Zero-Connectivity Outreach</span>
-            <h2 className="text-2xl font-black text-slate-900">Voice Outreach & Field Mobility</h2>
-          </div>
-          <Button asChild variant="outline" size="sm" className="text-xs font-bold">
-            <Link to="/citizen">Open Mobile Desk <ArrowRight className="size-3 ml-1" /></Link>
-          </Button>
-        </div>
-
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-xs">
-          <div className="grid gap-8 lg:grid-cols-3 items-center">
-            <div className="lg:col-span-2 space-y-4">
-              <div className="flex items-center gap-2">
-                <span className="rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs px-3 py-1">
-                  Bhashini AI Multi-Lingual Core
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Module 1: Strategic Corridors */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="grid size-11 place-items-center rounded-xl bg-blue-50 text-blue-700 font-bold group-hover:scale-110 transition-transform">
+                  🛣️
                 </span>
-                <span className="rounded-full bg-blue-100 text-blue-800 font-bold text-xs px-3 py-1">
-                  Offline Field Mesh
+                <span className="rounded-full bg-red-100 text-red-700 text-[10px] font-bold px-2.5 py-0.5">
+                  5 Highways Active
                 </span>
               </div>
-
-              <h3 className="text-2xl font-black text-slate-900">
-                Turn-by-Turn Audio Navigation for Mountain Truck Pilots
+              <h3 className="text-lg font-black text-slate-900 group-hover:text-blue-600 transition-colors">
+                Strategic Corridors & Bypasses
               </h3>
-
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Zero-literacy voice advisories transmitted in Assamese, Bodo, Meitei, Bengali, Mizo, and Nagamese. Drivers receive early mountain slope rumble warnings and detour routes without needing cellular internet.
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Physics-informed terrain risk modeling, GSI Bhusanket LEWS integration, rainfall accumulation thresholds, mountain pass elevations, and heavy vehicle detour bypasses.
               </p>
-
-              <div className="grid sm:grid-cols-2 gap-3 pt-2 text-xs">
-                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                  <strong className="block text-slate-900 mb-1">IVR Toll-Free Driver Line</strong>
-                  <span className="text-slate-500">1800-11-2026 for automated hazard queries</span>
-                </div>
-                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                  <strong className="block text-slate-900 mb-1">Offline Geotagged Cam</strong>
-                  <span className="text-slate-500">Upload rockfall photos; syncs when passing highway mesh node</span>
-                </div>
-              </div>
             </div>
+            <div className="pt-5 border-t border-slate-100 mt-5">
+              <Button asChild className="w-full bg-slate-900 hover:bg-blue-600 text-white font-bold text-xs">
+                <Link to="/corridors">
+                  Launch Corridors Desk <ArrowRight className="size-3.5 ml-1.5" />
+                </Link>
+              </Button>
+            </div>
+          </div>
 
-            <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 text-center">
-              <span className="text-4xl block">📱</span>
-              <h4 className="font-bold text-slate-900">Citizen Mobile App Active</h4>
-              <p className="text-xs text-slate-500">Android APK & PWA cached for 64 districts</p>
-              <Button asChild size="sm" className="w-full bg-[#059669] text-white font-bold">
-                <Link to="/citizen">Launch Mobile Simulator</Link>
+          {/* Module 2: NavIC Fleet Telemetry */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="grid size-11 place-items-center rounded-xl bg-emerald-50 text-emerald-700 font-bold group-hover:scale-110 transition-transform">
+                  🛰️
+                </span>
+                <span className="rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2.5 py-0.5">
+                  1,284 Convoys
+                </span>
+              </div>
+              <h3 className="text-lg font-black text-slate-900 group-hover:text-emerald-600 transition-colors">
+                NavIC Fleet & Cargo Radar
+              </h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                24/7 indigenous satellite telemetry tracking priority convoys carrying Medical Oxygen, Vaccines, FCI Foodgrains, and POL Petroleum fuels across all hill routes.
+              </p>
+            </div>
+            <div className="pt-5 border-t border-slate-100 mt-5">
+              <Button asChild className="w-full bg-slate-900 hover:bg-emerald-600 text-white font-bold text-xs">
+                <Link to="/fleet">
+                  Launch Fleet Radar <ArrowRight className="size-3.5 ml-1.5" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+
+          {/* Module 3: 6 Role-Based Incident Command Portals */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="grid size-11 place-items-center rounded-xl bg-purple-50 text-purple-700 font-bold group-hover:scale-110 transition-transform">
+                  🏛️
+                </span>
+                <span className="rounded-full bg-purple-100 text-purple-800 text-[10px] font-bold px-2.5 py-0.5">
+                  6 RBAC Portals
+                </span>
+              </div>
+              <h3 className="text-lg font-black text-slate-900 group-hover:text-purple-600 transition-colors">
+                Role Portals (MDoNER / BRO / PWD)
+              </h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Dedicated incident command desks for MDoNER Central, State PWD, Border Roads Organisation, NDMA, District Magistrates, and Emergency Convoy Coordinators.
+              </p>
+            </div>
+            <div className="pt-5 border-t border-slate-100 mt-5">
+              <Button asChild className="w-full bg-slate-900 hover:bg-purple-600 text-white font-bold text-xs">
+                <Link to="/roles">
+                  Access Role Portals <ArrowRight className="size-3.5 ml-1.5" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+
+          {/* Module 4: Citizen & Driver Offline Mobile Hub */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="grid size-11 place-items-center rounded-xl bg-amber-50 text-amber-700 font-bold group-hover:scale-110 transition-transform">
+                  📱
+                </span>
+                <span className="rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold px-2.5 py-0.5">
+                  230+ Dialects
+                </span>
+              </div>
+              <h3 className="text-lg font-black text-slate-900 group-hover:text-amber-600 transition-colors">
+                Citizen & Driver Mobile Desk
+              </h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Interactive mobile smartphone simulator with Bhashini voice navigation, offline-first geotagged photo reporting, and Twilio SMS fallback for zero-network dead zones.
+              </p>
+            </div>
+            <div className="pt-5 border-t border-slate-100 mt-5">
+              <Button asChild className="w-full bg-slate-900 hover:bg-amber-600 text-white font-bold text-xs">
+                <Link to="/citizen">
+                  Open Mobile Simulator <ArrowRight className="size-3.5 ml-1.5" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+
+          {/* Module 5: Leader Pilot (RAG Strategic Co-Pilot) */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="grid size-11 place-items-center rounded-xl bg-sky-50 text-sky-700 font-bold group-hover:scale-110 transition-transform">
+                  🤖
+                </span>
+                <span className="rounded-full bg-sky-100 text-sky-800 text-[10px] font-bold px-2.5 py-0.5">
+                  RAG SLM Engine
+                </span>
+              </div>
+              <h3 className="text-lg font-black text-slate-900 group-hover:text-sky-600 transition-colors">
+                Leader Pilot: AI Decision Engine
+              </h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Full-screen strategic assistant powered by retrieval-augmented generation. Allows district collectors to ask natural language questions with audited data citations.
+              </p>
+            </div>
+            <div className="pt-5 border-t border-slate-100 mt-5">
+              <Button asChild className="w-full bg-slate-900 hover:bg-sky-600 text-white font-bold text-xs">
+                <Link to="/copilot">
+                  Launch Co-Pilot Desk <ArrowRight className="size-3.5 ml-1.5" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+
+          {/* Module 6: Intermodal Fallback Logistics */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="grid size-11 place-items-center rounded-xl bg-teal-50 text-teal-700 font-bold group-hover:scale-110 transition-transform">
+                  🚢
+                </span>
+                <span className="rounded-full bg-teal-100 text-teal-800 text-[10px] font-bold px-2.5 py-0.5">
+                  NW-2 & NFR Rail
+                </span>
+              </div>
+              <h3 className="text-lg font-black text-slate-900 group-hover:text-teal-600 transition-colors">
+                Multimodal Supply Chain Failover
+              </h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Dynamic intermodal failover engine routing freight from blocked hill highways onto IWAI National Waterway-2 river barges and Northeast Frontier Railway rakes.
+              </p>
+            </div>
+            <div className="pt-5 border-t border-slate-100 mt-5">
+              <Button 
+                onClick={() => {
+                  const el = document.getElementById('bvs-section');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }} 
+                className="w-full bg-slate-900 hover:bg-teal-600 text-white font-bold text-xs cursor-pointer"
+              >
+                Inspect Multimodal Grid <ArrowRight className="size-3.5 ml-1.5" />
               </Button>
             </div>
           </div>

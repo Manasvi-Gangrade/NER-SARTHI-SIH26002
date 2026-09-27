@@ -239,13 +239,13 @@ Authenticated by: National Decision Support System (NER-SARTHI)`;
               Command Center (GIS)
             </Link>
             <Link to="/corridors" onClick={() => setOpen(false)} className="block p-2 rounded hover:bg-slate-100">
-              Strategic Corridors
+              Strategic Corridors & Bypasses
             </Link>
             <Link to="/fleet" onClick={() => setOpen(false)} className="block p-2 rounded hover:bg-slate-100">
               NavIC Fleet Telemetry
             </Link>
             <Link to="/roles" onClick={() => setOpen(false)} className="block p-2 rounded hover:bg-slate-100">
-              Role Portals
+              6 Role Portals (RBAC)
             </Link>
             <Link to="/citizen" onClick={() => setOpen(false)} className="block p-2 rounded hover:bg-slate-100">
               Citizen & Driver Mobile
@@ -255,6 +255,92 @@ Authenticated by: National Decision Support System (NER-SARTHI)`;
             </Link>
           </div>
         )}
+
+        {/* Primary Desktop Navigation Bar & Branding */}
+        <div className="border-t border-slate-200/80 bg-white/80 hidden lg:block">
+          <div className="mx-auto flex max-w-[1540px] items-center justify-between gap-4 px-4 py-2 lg:px-8">
+            {/* Brand Logo & Ministry Title */}
+            <Link to="/" className="flex items-center gap-3 group">
+              <div className="size-9 rounded-xl bg-gradient-to-br from-[#0b3d6b] via-[#1e40af] to-[#2563eb] text-white flex items-center justify-center font-black text-sm shadow-xs group-hover:scale-105 transition-transform">
+                NS
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-black text-slate-900 text-base tracking-tight">NER-SARTHI</span>
+                  <span className="rounded bg-blue-100 text-blue-800 text-[10px] font-black px-1.5 py-0.2 tracking-wider">
+                    MDoNER
+                  </span>
+                </div>
+                <p className="text-[10px] text-slate-500 font-semibold tracking-wide">
+                  Ministry of Development of North Eastern Region · Govt of India
+                </p>
+              </div>
+            </Link>
+
+            {/* Main Operational Modules Tabs */}
+            <nav className="flex items-center gap-1.5">
+              <Link
+                to="/"
+                activeProps={{ className: 'bg-blue-50 text-blue-700 font-bold border-blue-200 shadow-2xs' }}
+                inactiveProps={{ className: 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-transparent transition-all flex items-center gap-1.5"
+              >
+                <span className="size-2 rounded-full bg-blue-600" />
+                Command Center (GIS)
+              </Link>
+
+              <Link
+                to="/corridors"
+                activeProps={{ className: 'bg-blue-50 text-blue-700 font-bold border-blue-200 shadow-2xs' }}
+                inactiveProps={{ className: 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-transparent transition-all flex items-center gap-1.5"
+              >
+                Strategic Corridors
+                <span className="text-[10px] bg-red-100 text-red-700 font-bold px-1.5 py-0.2 rounded-full">5</span>
+              </Link>
+
+              <Link
+                to="/fleet"
+                activeProps={{ className: 'bg-blue-50 text-blue-700 font-bold border-blue-200 shadow-2xs' }}
+                inactiveProps={{ className: 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-transparent transition-all flex items-center gap-1.5"
+              >
+                NavIC Fleet Radar
+                <span className="text-[10px] bg-emerald-100 text-emerald-700 font-bold px-1.5 py-0.2 rounded-full">1.2K</span>
+              </Link>
+
+              <Link
+                to="/roles"
+                activeProps={{ className: 'bg-blue-50 text-blue-700 font-bold border-blue-200 shadow-2xs' }}
+                inactiveProps={{ className: 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-transparent transition-all flex items-center gap-1.5"
+              >
+                6 Role Portals
+                <span className="text-[10px] bg-blue-100 text-blue-700 font-bold px-1.5 py-0.2 rounded-full">RBAC</span>
+              </Link>
+
+              <Link
+                to="/citizen"
+                activeProps={{ className: 'bg-blue-50 text-blue-700 font-bold border-blue-200 shadow-2xs' }}
+                inactiveProps={{ className: 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-transparent transition-all flex items-center gap-1.5"
+              >
+                Citizen & Driver Mobile
+                <span className="text-[10px] bg-amber-100 text-amber-800 font-bold px-1.5 py-0.2 rounded-full">230+</span>
+              </Link>
+
+              <Link
+                to="/copilot"
+                activeProps={{ className: 'bg-blue-50 text-blue-700 font-bold border-blue-200 shadow-2xs' }}
+                inactiveProps={{ className: 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-transparent transition-all flex items-center gap-1.5"
+              >
+                AI Decision Co-Pilot
+                <span className="text-[10px] bg-purple-100 text-purple-700 font-bold px-1.5 py-0.2 rounded-full">SLM</span>
+              </Link>
+            </nav>
+          </div>
+        </div>
       </header>
 
       {/* 

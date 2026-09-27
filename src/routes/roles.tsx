@@ -3,13 +3,38 @@ import { useState } from 'react';
 import { 
   ShieldCheck, Radio, ClipboardCheck, Users, ArrowRight, 
   AlertTriangle, Building2, Truck, CheckCircle2, FileText, 
-  PhoneCall, Zap, Compass, Check
+  PhoneCall, Zap, Compass, Check, Smartphone
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PageHeading, Metrics, SectionHead, Status, Alerts } from '@/components/ner-ui';
 import { metadata, type Risk } from '@/lib/ner-data';
 
 const operationalRoles = [
+  {
+    id: 'citizen-panel',
+    name: 'Citizen & Commuter Portal',
+    icon: Smartphone,
+    jurisdiction: 'District Commuters & Remote Settlements',
+    scope: 'Public Accessibility & Hazard Reporting Desk',
+    summary: 'View live road closures, listen to spoken advisories in 230+ regional dialects, report rockfalls with geotagged photos, and check essential delivery ETAs without requiring Aadhaar KYC.',
+    metrics: [
+      { label: 'Remote Settlements', value: '4,280 Mapped', detail: '100% regional coverage', tone: 'safe' as Risk },
+      { label: 'Active Reports', value: '18 Today', detail: '6 verified by PWD', tone: 'watch' as Risk },
+      { label: 'Toll-Free IVRS', value: '1800-11-2026', detail: '230+ Dialects active', tone: 'safe' as Risk },
+    ],
+    priorityQueue: [
+      'Check NH-27 Jatinga road accessibility before embarking',
+      'Submit geotagged photo of slope crack near KM 149',
+      'Listen to audio weather alert in Assamese / Bodo',
+      'Track expected arrival time of medical & ration convoy',
+    ],
+    quickActions: [
+      'Report Road Obstruction / Mudslide',
+      'Play Spoken Route Guidance (Bhashini)',
+      'Check Hospital Oxygen & Ration Delivery ETA',
+      'Download Offline Settlement Map Pack',
+    ],
+  },
   {
     id: 'district-admin',
     name: 'District Magistrate (DM War Room)',
@@ -173,7 +198,7 @@ function Roles() {
         description="One single truth source, optimized for the operational workflows of District Magistrates, Central Secretariats, Emergency Responders, and Ground Engineers."
         aside={
           <span className="flex items-center gap-1.5 rounded-full border border-safe/30 bg-safe/10 px-3 py-1 text-xs font-bold text-safe">
-            <Zap className="size-3.5" /> 5 Dedicated Operations Desks
+            <Zap className="size-3.5" /> 6 Dedicated Operational Panels (RBAC)
           </span>
         }
       />

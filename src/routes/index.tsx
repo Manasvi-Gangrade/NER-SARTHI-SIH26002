@@ -442,6 +442,111 @@ function INDRACommandCenter() {
 
       {/* 
         ====================================================
+        INDRA EXACT: THREE INTEGRATED AI CORES SECTION
+        ====================================================
+      */}
+      <section className="mx-auto max-w-[1540px] px-4 lg:px-8 space-y-8 pt-4 pb-2">
+        <div className="text-center space-y-2 max-w-2xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+            Three Integrated AI Cores
+          </h2>
+          <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
+            Operating synchronously to monitor, communicate, and advise at a regional scale.
+          </p>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-3 max-w-6xl mx-auto">
+          {/* Core 1: NER-SARTHI CORE */}
+          <div className="rounded-3xl border border-slate-200/90 bg-white p-7 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-5">
+            <div className="space-y-4">
+              <div className="size-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl shadow-2xs">
+                🧠
+              </div>
+              <div>
+                <h3 className="text-xl font-black text-slate-900 tracking-tight">NER-SARTHI CORE</h3>
+                <span className="text-[11px] font-black text-blue-600 uppercase tracking-widest block mt-0.5">
+                  GLOBAL ONTOLOGY & TERRAIN ENGINE
+                </span>
+              </div>
+              <p className="text-xs sm:text-[13px] text-slate-600 leading-relaxed">
+                A continuously evolving AI backbone that connects all structured and unstructured mountain road data into a live semantic knowledge graph. Ingests data from IMD Doppler feeds, InSAR radar, and PWD logbooks.
+              </p>
+            </div>
+
+            <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+              <Button asChild size="sm" className="bg-[#0b3d6b] hover:bg-blue-700 text-white font-bold text-xs">
+                <Link to="/corridors">
+                  Explore Risk Graph <ArrowRight className="size-3.5 ml-1" />
+                </Link>
+              </Button>
+              <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                85-90% Accuracy
+              </span>
+            </div>
+          </div>
+
+          {/* Core 2: LEADER PILOT */}
+          <div className="rounded-3xl border border-slate-200/90 bg-white p-7 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-5">
+            <div className="space-y-4">
+              <div className="size-14 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-2xl shadow-2xs">
+                🧭
+              </div>
+              <div>
+                <h3 className="text-xl font-black text-slate-900 tracking-tight">LEADER PILOT</h3>
+                <span className="text-[11px] font-black text-purple-600 uppercase tracking-widest block mt-0.5">
+                  DECISION SUPPORT SYSTEM (RAG SLM)
+                </span>
+              </div>
+              <p className="text-xs sm:text-[13px] text-slate-600 leading-relaxed">
+                An AI-powered co-pilot for district magistrates, BRO taskforces, and MDoNER leadership that provides real-time predictive insights, natural-language query resolution, and physics-grounded scenario simulations.
+              </p>
+            </div>
+
+            <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+              <Button asChild size="sm" className="bg-[#7c3aed] hover:bg-purple-700 text-white font-bold text-xs">
+                <Link to="/copilot">
+                  Launch Co-Pilot <ArrowRight className="size-3.5 ml-1" />
+                </Link>
+              </Button>
+              <span className="text-[11px] font-bold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-200">
+                SLM Active
+              </span>
+            </div>
+          </div>
+
+          {/* Core 3: VOICE OUTREACH */}
+          <div className="rounded-3xl border border-slate-200/90 bg-white p-7 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-5">
+            <div className="space-y-4">
+              <div className="size-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl shadow-2xs">
+                🗣️
+              </div>
+              <div>
+                <h3 className="text-xl font-black text-slate-900 tracking-tight">VOICE OUTREACH</h3>
+                <span className="text-[11px] font-black text-emerald-600 uppercase tracking-widest block mt-0.5">
+                  MULTILINGUAL & OFFLINE DRIVER MESH
+                </span>
+              </div>
+              <p className="text-xs sm:text-[13px] text-slate-600 leading-relaxed">
+                AI-driven voice outreach in 230+ regional languages and dialects (Assamese, Bodo, Meitei, Khasi, Mizo), delivering spoken hazard warnings, turn-by-turn bypass audio, and zero-connectivity offline mesh reporting.
+              </p>
+            </div>
+
+            <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+              <Button asChild size="sm" className="bg-[#059669] hover:bg-emerald-700 text-white font-bold text-xs">
+                <Link to="/citizen">
+                  Launch Mobile Desk <ArrowRight className="size-3.5 ml-1" />
+                </Link>
+              </Button>
+              <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                230+ Dialects
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 
+        ====================================================
         4. DIRECT FOCUS RIBBON (NETRA / INDRA FAST ACCESS)
         ====================================================
       */}

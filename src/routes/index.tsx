@@ -5,12 +5,14 @@ import {
   Smartphone, Sparkles, Navigation, Layers, CheckCircle2, 
   AlertTriangle, Phone, Radio, WifiOff, Languages, CloudRain,
   Eye, Compass, ShieldCheck, Download, ChevronRight, FileText,
-  Building2, Users, ClipboardCheck, ArrowUpRight
+  Building2, Users, ClipboardCheck, ArrowUpRight, Volume2,
+  Anchor, Train, Calculator
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { 
   PageHeading, Metrics, MapView, Alerts, SectionHead, 
-  AccessChart, ShipmentChart, FleetTable, Status, RiskChart, Bypass, Source 
+  AccessChart, ShipmentChart, FleetTable, Status, RiskChart, Bypass, Source,
+  DirectQueryBar, BVSBayesianCalculator, MultimodalFallbackPanel
 } from '@/components/ner-ui';
 import { 
   districts, alerts, vehicles, corridors, platformPillars, 
@@ -152,6 +154,7 @@ function CommandCenter() {
   const [activeCopilotQuery, setActiveCopilotQuery] = useState(aiQueries[0]!);
   const [copilotLoading, setCopilotLoading] = useState(false);
   const [customQuery, setCustomQuery] = useState('');
+  const [focusChokepointId, setFocusChokepointId] = useState<string | undefined>(undefined);
 
   // Mobile App Phone Mockup State
   const [phoneScreen, setPhoneScreen] = useState<'map' | 'report' | 'sos'>('map');
@@ -191,6 +194,23 @@ function CommandCenter() {
     }, 600);
   };
 
+  const speakCopilotAnswer = (text: string) => {
+    if ('speechSynthesis' in window) {
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = 1.0;
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(u);
+    }
+  };
+
+  const handleChokepointFocus = (chkId: string) => {
+    setFocusChokepointId(chkId);
+    const element = document.getElementById('dashboard-view');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="mx-auto max-w-[1540px] px-4 py-8 lg:px-8 space-y-10">
       {/* 
@@ -208,7 +228,7 @@ function CommandCenter() {
               </span>
               <span className="rounded-full bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-800 flex items-center gap-1.5">
                 <ShieldCheck className="size-3.5" />
-                Smart India Hackathon (SIH26002)
+                PM-DevINE & NESIDS Connectivity Mission
               </span>
               <span className="rounded-full bg-safe/10 px-3 py-1 text-xs font-bold text-safe flex items-center gap-1.5">
                 <span className="pulse-dot size-2 rounded-full bg-safe inline-block" />
@@ -233,8 +253,8 @@ function CommandCenter() {
               </a>
             </Button>
             <Button asChild variant="outline" className="h-11 px-5 border-primary/20 text-primary font-bold hover:bg-primary/5">
-              <a href="#mobile-preview">
-                Citizen Mobile App <Smartphone className="size-4 ml-1.5 text-muted-foreground" />
+              <a href="#bvs-section">
+                BVS Bayesian Model <Calculator className="size-4 ml-1.5 text-muted-foreground" />
               </a>
             </Button>
           </div>
@@ -287,6 +307,21 @@ function CommandCenter() {
             <p className="mt-1 text-[11px] text-muted-foreground">Zero hospital oxygen stockouts</p>
           </div>
         </div>
+
+        {/* Direct Query Action Ribbon (NETRA Rail & INDRA reference) */}
+        <div className="mt-6 pt-5 border-t border-border/70">
+          <DirectQueryBar
+            onSelectChokepoint={handleChokepointFocus}
+            onOpenBVS={() => {
+              const el = document.getElementById('bvs-section');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }}
+            onOpenSimulation={() => {
+              const el = document.getElementById('dashboard-view');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }}
+          />
+        </div>
       </section>
 
       {/* 
@@ -298,75 +333,68 @@ function CommandCenter() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-border pb-4">
           <div>
             <span className="section-kicker">Multi-Stakeholder Architecture</span>
-            <h2 className="text-lg font-black text-foreground">Operational Role Perspectives</h2>
+            <h2 className="text-xl font-bold text-foreground">Operational Lens Switcher</h2>
             <p className="text-xs text-muted-foreground">
-              Select a stakeholder perspective to dynamically adapt metrics, priority queues, and decision controls.
+              Select an authority view to filter role-tailored priority telemetry, action queues, and alerts.
             </p>
           </div>
-          <span className="rounded bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary self-start md:self-auto">
-            Active Lens: {activeRoleData.label}
+          <span className="rounded bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary shrink-0">
+            Current: {activeRoleData.label}
           </span>
         </div>
 
-        {/* Role Tab Selector Buttons */}
-        <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
-          {(Object.keys(roleProfiles) as RoleKey[]).map((key) => {
-            const role = roleProfiles[key];
-            const Icon = role.icon;
-            const isSelected = selectedRole === key;
+        {/* Role Select Buttons */}
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
+          {(Object.keys(roleProfiles) as RoleKey[]).map((rKey) => {
+            const r = roleProfiles[rKey];
+            const isSelected = selectedRole === rKey;
+            const Icon = r.icon;
             return (
-              <Button
-                key={key}
-                variant={isSelected ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setSelectedRole(key)}
-                className={`shrink-0 text-xs font-bold h-9 px-3.5 transition-all ${
-                  isSelected ? 'shadow-xs' : 'border-border hover:bg-muted text-muted-foreground'
+              <button
+                key={rKey}
+                type="button"
+                onClick={() => setSelectedRole(rKey)}
+                className={`flex flex-col items-start rounded-lg border p-3 text-left transition-all ${
+                  isSelected
+                    ? 'border-primary bg-primary/10 shadow-xs ring-1 ring-primary'
+                    : 'border-border bg-card hover:bg-muted/40 hover:border-primary/30'
                 }`}
               >
-                <Icon className="size-3.5 mr-1.5" />
-                {role.label}
-              </Button>
+                <div className="flex w-full items-center justify-between text-muted-foreground">
+                  <Icon className={`size-4 ${isSelected ? 'text-primary' : ''}`} />
+                  <span className="text-[9px] font-bold uppercase rounded bg-muted px-1.5 py-0.2">
+                    {r.badge}
+                  </span>
+                </div>
+                <span className="mt-2 text-xs font-black text-foreground">{r.label}</span>
+                <span className="text-[10px] text-muted-foreground line-clamp-1">{r.scope}</span>
+              </button>
             );
           })}
         </div>
 
-        {/* Dynamic Role Profile Display Banner */}
-        <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-4 sm:p-5">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="rounded bg-primary text-primary-foreground px-2 py-0.5 text-[10px] font-black uppercase">
-                  {activeRoleData.badge}
-                </span>
-                <span className="text-xs font-bold text-muted-foreground">{activeRoleData.scope}</span>
-              </div>
-              <p className="text-sm font-bold text-foreground">{activeRoleData.headline}</p>
+        {/* Role Detailed Focus View */}
+        <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-4 animate-fade-in">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-primary/15 pb-3">
+            <div>
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-primary">
+                Active Desk Mandate: {activeRoleData.scope}
+              </span>
+              <p className="text-xs sm:text-sm font-semibold text-foreground mt-0.5">
+                {activeRoleData.headline}
+              </p>
             </div>
-
-            <div className="flex items-center gap-2 self-start lg:self-auto">
-              <Button asChild size="sm" variant="outline" className="text-xs font-bold bg-card border-border">
-                <Link to="/roles">Open Role War Room <ArrowRight className="size-3 ml-1" /></Link>
-              </Button>
+            <div className="flex flex-wrap items-center gap-3">
+              {activeRoleData.kpis.map((kpi) => (
+                <div key={kpi.label} className="rounded bg-card px-3 py-1.5 border border-border shadow-2xs">
+                  <span className="text-[9px] font-bold uppercase text-muted-foreground block">{kpi.label}</span>
+                  <span className="text-sm font-black text-primary">{kpi.value}</span>
+                  <span className="text-[9px] text-muted-foreground block">{kpi.detail}</span>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Dynamic Role Metrics Strip */}
-          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 border-t border-primary/15 pt-3">
-            {activeRoleData.kpis.map((kpi) => (
-              <div key={kpi.label} className="rounded bg-card/80 p-2.5 border border-border/80">
-                <span className="text-[10px] font-bold uppercase text-muted-foreground block">{kpi.label}</span>
-                <span className={`text-xl font-black mt-0.5 block ${
-                  kpi.tone === 'critical' ? 'text-critical' : kpi.tone === 'safe' ? 'text-safe' : 'text-primary'
-                }`}>
-                  {kpi.value}
-                </span>
-                <span className="text-[10px] text-muted-foreground">{kpi.detail}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Role Priority Action Queue */}
           <div className="mt-3 pt-3 border-t border-primary/15 flex flex-wrap items-center gap-2 text-xs">
             <span className="font-extrabold uppercase text-[10px] tracking-wider text-primary mr-1">Immediate Actions:</span>
             {activeRoleData.actionQueue.map((item, idx) => (
@@ -405,12 +433,15 @@ function CommandCenter() {
               title="District Vulnerability & Highway Corridors"
               aside={
                 <div className="flex items-center gap-2">
-                  <span className="text-[11px] text-muted-foreground hidden sm:inline">Click district or highway for telemetry</span>
+                  <span className="text-[11px] text-muted-foreground hidden sm:inline">Click district or chokepoint for telemetry</span>
                 </div>
               }
             />
-            <div className="h-[460px] sm:h-[520px] p-2 relative">
-              <MapView highlightCorridor={selectedCorridorId} />
+            <div className="h-[460px] sm:h-[530px] p-2 relative">
+              <MapView 
+                highlightCorridor={selectedCorridorId} 
+                focusChokepointId={focusChokepointId}
+              />
             </div>
             {/* Quick Corridor Selection Bar below map */}
             <div className="border-t border-border bg-card p-3 flex flex-wrap items-center justify-between gap-2 text-xs">
@@ -424,7 +455,10 @@ function CommandCenter() {
                     className={`h-7 px-2.5 text-xs font-bold ${
                       c.status === 'critical' ? 'border-critical/30' : ''
                     }`}
-                    onClick={() => setSelectedCorridorId(c.id)}
+                    onClick={() => {
+                      setSelectedCorridorId(c.id);
+                      setFocusChokepointId(undefined);
+                    }}
                   >
                     {c.id}
                     <span className={`ml-1 size-1.5 rounded-full ${
@@ -522,7 +556,27 @@ function CommandCenter() {
 
       {/* 
         ====================================================
-        5. FLEET TELEMETRY & CONVOY RADAR
+        5. BASE VULNERABILITY SCORE (BVS) & MULTIMODAL FAILOVER
+        ====================================================
+      */}
+      <section id="bvs-section" className="space-y-6">
+        <div>
+          <span className="section-kicker">Mathematical Formulation & Intermodal Failover</span>
+          <h2 className="text-2xl font-black text-foreground">Dynamic Risk Modeling & Multimodal Logistics</h2>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-2">
+          {/* BVS Interactive Bayesian Calculator */}
+          <BVSBayesianCalculator />
+
+          {/* Multimodal Fallback Dispatch Panel */}
+          <MultimodalFallbackPanel corridorId={selectedCorridorId} />
+        </div>
+      </section>
+
+      {/* 
+        ====================================================
+        6. FLEET TELEMETRY & CONVOY RADAR
         ====================================================
       */}
       <section className="space-y-4">
@@ -542,7 +596,7 @@ function CommandCenter() {
 
       {/* 
         ====================================================
-        6. AI DECISION CO-PILOT WORKBENCH & INTERACTIVE CHAT
+        7. AI DECISION CO-PILOT WORKBENCH & INTERACTIVE CHAT
         ====================================================
       */}
       <section className="space-y-4">
@@ -596,9 +650,19 @@ function CommandCenter() {
                       <Sparkles className="size-4" />
                       Executive Situation Intelligence
                     </span>
-                    <span className="rounded bg-safe/10 px-2 py-0.5 text-[10px] font-bold text-safe">
-                      {activeCopilotQuery.confidence}% Grounded Confidence
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="rounded bg-safe/10 px-2 py-0.5 text-[10px] font-bold text-safe">
+                        {activeCopilotQuery.confidence}% Grounded Confidence
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => speakCopilotAnswer(activeCopilotQuery.answer)}
+                        className="rounded hover:bg-muted p-1 text-primary"
+                        title="Read aloud using speech synthesis"
+                      >
+                        <Volume2 className="size-3.5" />
+                      </button>
+                    </div>
                   </div>
 
                   <p className="text-xs sm:text-sm leading-relaxed text-foreground">
@@ -645,7 +709,7 @@ function CommandCenter() {
               <span className="section-kicker">Quick Strategic Inquiries</span>
               <h3 className="text-sm font-bold text-foreground mb-3">Pre-Grounded Scenarios</h3>
               <div className="space-y-2">
-                {aiQueries.slice(0, 4).map((q) => (
+                {aiQueries.map((q) => (
                   <Button
                     key={q.q}
                     variant={activeCopilotQuery.q === q.q ? 'secondary' : 'outline'}
@@ -682,7 +746,7 @@ function CommandCenter() {
 
       {/* 
         ====================================================
-        7. CITIZEN & DRIVER SMARTPHONE MOCKUP PREVIEW
+        8. CITIZEN & DRIVER SMARTPHONE MOCKUP PREVIEW
         ====================================================
       */}
       <section id="mobile-preview" className="space-y-4">
@@ -930,7 +994,7 @@ function CommandCenter() {
 
       {/* 
         ====================================================
-        8. PLATFORM PILLARS & FEATURE MATRIX
+        9. PLATFORM PILLARS & FEATURE MATRIX
         ====================================================
       */}
       <section className="space-y-4">

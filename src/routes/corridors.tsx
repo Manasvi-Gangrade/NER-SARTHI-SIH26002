@@ -7,7 +7,8 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { 
-  PageHeading, Metrics, SectionHead, Status, RiskChart, Bypass, MapView 
+  PageHeading, Metrics, SectionHead, Status, RiskChart, Bypass, MapView,
+  MultimodalFallbackPanel 
 } from '@/components/ner-ui';
 import { corridors, metadata, weekly, type Risk } from '@/lib/ner-data';
 
@@ -196,6 +197,9 @@ function Corridors() {
               <Bypass name={selected.bypass} extra={selected.extra} />
             </div>
           </article>
+
+          {/* Multimodal Triple-Tier Redundancy Conduits */}
+          <MultimodalFallbackPanel corridorId={selected.id} />
 
           {/* Bottom Grid: Multi-Highway Disruption Matrix & Bypass Schedule */}
           <div className="grid gap-6 xl:grid-cols-2">

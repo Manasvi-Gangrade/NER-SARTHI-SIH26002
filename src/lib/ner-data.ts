@@ -15,25 +15,116 @@ export interface DistrictData {
   depotStatus: 'Adequate' | 'Critical Reserves' | 'Stockpile Low';
   nearestNdrf: string;
   activeIncidents: number;
+  hazardCluster: 'Cluster A' | 'Cluster B'; // Cluster A: Mountain Landslides | Cluster B: Riverine Floods & Islands
 }
 
 export const districts: DistrictData[] = [
-  { id: 'DH', name: 'Dima Hasao', state: 'Assam', score: 86, status: 'critical', x: 49, y: 50, access: 32, elevation: '1,108 m', rainfall24h: 124, passStatus: 'Restricted', depotStatus: 'Critical Reserves', nearestNdrf: 'Silchar (1st Bn)', activeIncidents: 3 },
-  { id: 'KA', name: 'Karbi Anglong', state: 'Assam', score: 62, status: 'watch', x: 55, y: 43, access: 68, elevation: '410 m', rainfall24h: 81, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Guwahati (1st Bn)', activeIncidents: 1 },
-  { id: 'KM', name: 'Kamrup Metro', state: 'Assam', score: 28, status: 'safe', x: 41, y: 39, access: 94, elevation: '55 m', rainfall24h: 38, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Patgaon Base HQ', activeIncidents: 0 },
-  { id: 'TW', name: 'Tawang', state: 'Arunachal Pradesh', score: 38, status: 'safe', x: 43, y: 19, access: 74, elevation: '3,048 m', rainfall24h: 46, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Tezpur Staging', activeIncidents: 0 },
-  { id: 'IT', name: 'Papum Pare (Itanagar)', state: 'Arunachal Pradesh', score: 48, status: 'safe', x: 62, y: 22, access: 80, elevation: '750 m', rainfall24h: 62, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Hollongi Unit', activeIncidents: 1 },
-  { id: 'MG', name: 'Mangan', state: 'Sikkim', score: 71, status: 'watch', x: 21, y: 37, access: 54, elevation: '1,604 m', rainfall24h: 106, passStatus: 'Restricted', depotStatus: 'Stockpile Low', nearestNdrf: 'Gangtok Unit (2nd Bn)', activeIncidents: 2 },
-  { id: 'GT', name: 'East Sikkim (Gangtok)', state: 'Sikkim', score: 44, status: 'safe', x: 24, y: 44, access: 82, elevation: '1,650 m', rainfall24h: 58, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Gangtok 2nd Bn', activeIncidents: 0 },
-  { id: 'EKH', name: 'East Khasi Hills', state: 'Meghalaya', score: 78, status: 'critical', x: 39, y: 55, access: 48, elevation: '1,496 m', rainfall24h: 98, passStatus: 'Restricted', depotStatus: 'Stockpile Low', nearestNdrf: 'Shillong Sector HQ', activeIncidents: 2 },
-  { id: 'WGH', name: 'West Garo Hills', state: 'Meghalaya', score: 41, status: 'safe', x: 31, y: 53, access: 78, elevation: '650 m', rainfall24h: 44, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Tura Quick Response', activeIncidents: 0 },
-  { id: 'KO', name: 'Kohima', state: 'Nagaland', score: 43, status: 'safe', x: 70, y: 47, access: 82, elevation: '1,444 m', rainfall24h: 54, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Dimapur (12th Bn)', activeIncidents: 1 },
-  { id: 'MO', name: 'Mokokchung', state: 'Nagaland', score: 58, status: 'watch', x: 74, y: 39, access: 69, elevation: '1,325 m', rainfall24h: 72, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Dimapur Detachment', activeIncidents: 1 },
-  { id: 'IW', name: 'Imphal West', state: 'Manipur', score: 66, status: 'watch', x: 65, y: 62, access: 76, elevation: '786 m', rainfall24h: 69, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Koirengei Post', activeIncidents: 1 },
-  { id: 'CC', name: 'Churachandpur', state: 'Manipur', score: 69, status: 'watch', x: 61, y: 69, access: 61, elevation: '922 m', rainfall24h: 78, passStatus: 'Restricted', depotStatus: 'Stockpile Low', nearestNdrf: 'Koirengei SDRF', activeIncidents: 2 },
-  { id: 'AZ', name: 'Aizawl', state: 'Mizoram', score: 32, status: 'safe', x: 54, y: 74, access: 87, elevation: '1,132 m', rainfall24h: 42, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Durtlang Post', activeIncidents: 0 },
-  { id: 'LU', name: 'Lunglei', state: 'Mizoram', score: 49, status: 'safe', x: 52, y: 84, access: 73, elevation: '722 m', rainfall24h: 63, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Lunglei District Team', activeIncidents: 1 },
-  { id: 'WT', name: 'West Tripura', state: 'Tripura', score: 35, status: 'safe', x: 40, y: 72, access: 81, elevation: '38 m', rainfall24h: 49, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Agartala (1st Bn)', activeIncidents: 0 },
+  { id: 'DH', name: 'Dima Hasao', state: 'Assam', score: 86, status: 'critical', x: 49, y: 50, access: 32, elevation: '1,108 m', rainfall24h: 124, passStatus: 'Restricted', depotStatus: 'Critical Reserves', nearestNdrf: 'Silchar (1st Bn)', activeIncidents: 3, hazardCluster: 'Cluster A' },
+  { id: 'KA', name: 'Karbi Anglong', state: 'Assam', score: 62, status: 'watch', x: 55, y: 43, access: 68, elevation: '410 m', rainfall24h: 81, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Guwahati (1st Bn)', activeIncidents: 1, hazardCluster: 'Cluster A' },
+  { id: 'KM', name: 'Kamrup Metro (Guwahati)', state: 'Assam', score: 28, status: 'safe', x: 41, y: 39, access: 94, elevation: '55 m', rainfall24h: 38, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Patgaon Base HQ', activeIncidents: 0, hazardCluster: 'Cluster B' },
+  { id: 'MJ', name: 'Majuli River Island', state: 'Assam', score: 74, status: 'watch', x: 64, y: 31, access: 42, elevation: '84 m', rainfall24h: 112, passStatus: 'Restricted', depotStatus: 'Stockpile Low', nearestNdrf: 'Jorhat Water Rescue', activeIncidents: 2, hazardCluster: 'Cluster B' },
+  { id: 'DHB', name: 'Dhubri (Brahmaputra)', state: 'Assam', score: 55, status: 'watch', x: 31, y: 41, access: 71, elevation: '34 m', rainfall24h: 88, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Jogighopa NDRF Post', activeIncidents: 1, hazardCluster: 'Cluster B' },
+  { id: 'TW', name: 'Tawang', state: 'Arunachal Pradesh', score: 38, status: 'safe', x: 43, y: 19, access: 74, elevation: '3,048 m', rainfall24h: 46, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Tezpur Staging', activeIncidents: 0, hazardCluster: 'Cluster A' },
+  { id: 'IT', name: 'Papum Pare (Itanagar)', state: 'Arunachal Pradesh', score: 48, status: 'safe', x: 62, y: 22, access: 80, elevation: '750 m', rainfall24h: 62, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Hollongi Unit', activeIncidents: 1, hazardCluster: 'Cluster A' },
+  { id: 'MG', name: 'Mangan', state: 'Sikkim', score: 71, status: 'watch', x: 21, y: 37, access: 54, elevation: '1,604 m', rainfall24h: 106, passStatus: 'Restricted', depotStatus: 'Stockpile Low', nearestNdrf: 'Gangtok Unit (2nd Bn)', activeIncidents: 2, hazardCluster: 'Cluster A' },
+  { id: 'GT', name: 'East Sikkim (Gangtok)', state: 'Sikkim', score: 44, status: 'safe', x: 24, y: 44, access: 82, elevation: '1,650 m', rainfall24h: 58, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Gangtok 2nd Bn', activeIncidents: 0, hazardCluster: 'Cluster A' },
+  { id: 'EKH', name: 'East Khasi Hills', state: 'Meghalaya', score: 78, status: 'critical', x: 39, y: 55, access: 48, elevation: '1,496 m', rainfall24h: 98, passStatus: 'Restricted', depotStatus: 'Stockpile Low', nearestNdrf: 'Shillong Sector HQ', activeIncidents: 2, hazardCluster: 'Cluster A' },
+  { id: 'WGH', name: 'West Garo Hills', state: 'Meghalaya', score: 41, status: 'safe', x: 31, y: 53, access: 78, elevation: '650 m', rainfall24h: 44, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Tura Quick Response', activeIncidents: 0, hazardCluster: 'Cluster B' },
+  { id: 'KO', name: 'Kohima', state: 'Nagaland', score: 43, status: 'safe', x: 70, y: 47, access: 82, elevation: '1,444 m', rainfall24h: 54, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Dimapur (12th Bn)', activeIncidents: 1, hazardCluster: 'Cluster A' },
+  { id: 'MO', name: 'Mokokchung', state: 'Nagaland', score: 58, status: 'watch', x: 74, y: 39, access: 69, elevation: '1,325 m', rainfall24h: 72, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Dimapur Detachment', activeIncidents: 1, hazardCluster: 'Cluster A' },
+  { id: 'IW', name: 'Imphal West', state: 'Manipur', score: 66, status: 'watch', x: 65, y: 62, access: 76, elevation: '786 m', rainfall24h: 69, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Koirengei Post', activeIncidents: 1, hazardCluster: 'Cluster B' },
+  { id: 'CC', name: 'Churachandpur', state: 'Manipur', score: 69, status: 'watch', x: 61, y: 69, access: 61, elevation: '922 m', rainfall24h: 78, passStatus: 'Restricted', depotStatus: 'Stockpile Low', nearestNdrf: 'Koirengei SDRF', activeIncidents: 2, hazardCluster: 'Cluster A' },
+  { id: 'AZ', name: 'Aizawl', state: 'Mizoram', score: 32, status: 'safe', x: 54, y: 74, access: 87, elevation: '1,132 m', rainfall24h: 42, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Durtlang Post', activeIncidents: 0, hazardCluster: 'Cluster A' },
+  { id: 'LU', name: 'Lunglei', state: 'Mizoram', score: 49, status: 'safe', x: 52, y: 84, access: 73, elevation: '722 m', rainfall24h: 63, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Lunglei District Team', activeIncidents: 1, hazardCluster: 'Cluster A' },
+  { id: 'WT', name: 'West Tripura (Agartala)', state: 'Tripura', score: 35, status: 'safe', x: 40, y: 72, access: 81, elevation: '38 m', rainfall24h: 49, passStatus: 'Clear', depotStatus: 'Adequate', nearestNdrf: 'Agartala (1st Bn)', activeIncidents: 0, hazardCluster: 'Cluster B' },
+];
+
+export interface StrategicChokepoint {
+  id: string;
+  name: string;
+  category: 'Strategic Corridor' | 'Multimodal Hub' | 'Riverine Crossing' | 'Border Gateway';
+  x: number; // SVG x
+  y: number; // SVG y
+  status: 'Open' | 'Congested' | 'High Alert' | 'Multi-Modal Shift';
+  trafficLoad: string;
+  description: string;
+  alternativeRoute: string;
+  significance: string;
+}
+
+export const strategicChokepoints: StrategicChokepoint[] = [
+  {
+    id: 'CHK-01',
+    name: 'Siliguri Corridor ("Chicken\'s Neck")',
+    category: 'Strategic Corridor',
+    x: 18,
+    y: 48,
+    status: 'Congested',
+    trafficLoad: '4,200 Trucks / 24h',
+    description: '22 km narrow land bridge connecting mainland India with all 8 North Eastern states. Any disruption here isolates the entire region.',
+    alternativeRoute: 'NFR Broad Gauge Freight Rail + Bangladesh Transit Protocol (PIWT)',
+    significance: 'Single Continental Supply Lifeline for 45M Citizens',
+  },
+  {
+    id: 'CHK-02',
+    name: 'Jogighopa Multimodal Logistics Park (MMLP)',
+    category: 'Multimodal Hub',
+    x: 33,
+    y: 40,
+    status: 'Multi-Modal Shift',
+    trafficLoad: 'Active Rail-River Ro-Ro Transfer',
+    description: 'India\'s premier multimodal logistics park on Brahmaputra river connecting Rail, National Waterway-2, and NH-17.',
+    alternativeRoute: 'Inland Waterway Barge to Pandu (Guwahati) + Broad Gauge Rail',
+    significance: 'Primary Redundancy Hub when Highland Roads are Blocked',
+  },
+  {
+    id: 'CHK-03',
+    name: 'Majuli Island Ferry Crossing (NW-2)',
+    category: 'Riverine Crossing',
+    x: 64,
+    y: 31,
+    status: 'High Alert',
+    trafficLoad: 'Ro-Pax Ferry Operating at 40% Capacity',
+    description: 'World\'s largest inhabited riverine island on Brahmaputra. Swelling monsoon waters threaten ferry logistics and medical transfers.',
+    alternativeRoute: 'Nimati Ghat to Aphalamukh Ro-Pax + Emergency Air Drop',
+    significance: 'Cluster B Riverine Vulnerability Testing Benchmark',
+  },
+  {
+    id: 'CHK-04',
+    name: 'Srirampur & Boxirhat Border Gateways',
+    category: 'Border Gateway',
+    x: 28,
+    y: 42,
+    status: 'Open',
+    trafficLoad: '2,850 Commercial Vehicles / 24h',
+    description: 'Assam-West Bengal interstate border checkpoint where automated RFID / FASTag logistics profiling screens cargo entering NER.',
+    alternativeRoute: 'Alipurduar Railway Interchange Bypass',
+    significance: 'Entry Telemetry Gate for All Commercial Inflow',
+  },
+  {
+    id: 'CHK-05',
+    name: 'Jatinga Escarpment KM 148 (NH-27)',
+    category: 'Strategic Corridor',
+    x: 49,
+    y: 50,
+    status: 'High Alert',
+    trafficLoad: 'Restricted to Emergency Essential Convoys Only',
+    description: 'Steep sedimentary slope in Dima Hasao where 124mm rainfall triggered InSAR slope displacement of 14mm.',
+    alternativeRoute: 'Umrangso → Lanka Highland Bypass (+42 min)',
+    significance: 'Sole Direct Road Link to Silchar, Tripura, Mizoram & Manipur',
+  },
+  {
+    id: 'CHK-06',
+    name: 'Sonapur Tunnel Southern Axis (NH-06)',
+    category: 'Strategic Corridor',
+    x: 39,
+    y: 55,
+    status: 'High Alert',
+    trafficLoad: 'Single-Lane Escort with BRO Bulldozers on Standby',
+    description: 'Flash mudflow chute on Shillong-Silchar mountain highway. Heavy rain causes repeated landslide damming.',
+    alternativeRoute: 'Jowai → Dawki → Badarpur Relief Diversion (+36 min)',
+    significance: 'Secondary Lifeline into Southern NER Valleys',
+  },
 ];
 
 export interface CorridorData {
@@ -52,6 +143,7 @@ export interface CorridorData {
   avgSpeed: number; // km/h
   blockagePoint?: string;
   passCoords: [number, number]; // x, y for map visualization
+  hazardCluster: 'Cluster A' | 'Cluster B';
 }
 
 export const corridors: CorridorData[] = [
@@ -71,6 +163,7 @@ export const corridors: CorridorData[] = [
     avgSpeed: 28,
     blockagePoint: 'KM 148+200 Jatinga Escarpment',
     passCoords: [49, 50],
+    hazardCluster: 'Cluster A',
   },
   {
     id: 'NH-06',
@@ -88,6 +181,7 @@ export const corridors: CorridorData[] = [
     avgSpeed: 32,
     blockagePoint: 'Sonapur Tunnel Southern Approach',
     passCoords: [39, 55],
+    hazardCluster: 'Cluster A',
   },
   {
     id: 'NH-10',
@@ -105,6 +199,7 @@ export const corridors: CorridorData[] = [
     avgSpeed: 24,
     blockagePoint: '29th Mile Slump Area',
     passCoords: [21, 37],
+    hazardCluster: 'Cluster A',
   },
   {
     id: 'AS-21',
@@ -122,6 +217,7 @@ export const corridors: CorridorData[] = [
     avgSpeed: 38,
     blockagePoint: 'Diyungbra River Crossing',
     passCoords: [55, 43],
+    hazardCluster: 'Cluster A',
   },
   {
     id: 'NH-02',
@@ -138,6 +234,7 @@ export const corridors: CorridorData[] = [
     distanceKm: 214,
     avgSpeed: 44,
     passCoords: [70, 47],
+    hazardCluster: 'Cluster A',
   },
 ];
 
@@ -283,6 +380,7 @@ export interface OperationalAlert {
   sourceAgency: string;
   description: string;
   suggestedAction: string;
+  voiceText?: string;
 }
 
 export const alerts: OperationalAlert[] = [
@@ -296,6 +394,7 @@ export const alerts: OperationalAlert[] = [
     sourceAgency: 'Geological Survey of India & IMD Telemetry',
     description: 'InSAR ground displacement of 14mm detected after 124mm rainfall in 18 hrs. Escarpment saturated.',
     suggestedAction: 'Enforce Umrangso → Lanka diversion for heavy multi-axle freight immediately.',
+    voiceText: 'Critical landslide warning on National Highway 27 at Jatinga Escarpment. Heavy vehicles are being diverted via Umrangso.',
   },
   {
     id: 'ALT-1091',
@@ -307,6 +406,7 @@ export const alerts: OperationalAlert[] = [
     sourceAgency: 'Border Roads Organisation (Project Swastik)',
     description: 'Debris clearing dozer operating on right bank. Light passenger and emergency medical vehicles permitted.',
     suggestedAction: 'Prioritize medical vehicle NER-MED-209 through escort checkpost.',
+    voiceText: 'Notice for Sikkim highway: Single-lane traffic restored at 29th Mile under Border Roads Organisation escort.',
   },
   {
     id: 'ALT-1090',
@@ -318,6 +418,7 @@ export const alerts: OperationalAlert[] = [
     sourceAgency: 'State Disaster Management Authority (SDMA)',
     description: 'Mudflow near Sonapur tunnel approach prompted preventative bypass activation.',
     suggestedAction: 'Notify Barak Valley civil hospital of 36 min revised arrival estimate.',
+    voiceText: 'Meghalaya corridor alert: Mudflow near Sonapur tunnel. Emergency convoys diverted via Dawki route.',
   },
   {
     id: 'ALT-1089',
@@ -329,6 +430,7 @@ export const alerts: OperationalAlert[] = [
     sourceAgency: 'Nagaland PWD (National Highways)',
     description: 'All fallen boulders cleared; slope-net retention intact. Both dual carriageways operational.',
     suggestedAction: 'Resume standard freight dispatch schedule for Imphal Valley.',
+    voiceText: 'Nagaland Kohima update: Zubza Pass cleared. Full double lane operation restored.',
   },
   {
     id: 'ALT-1088',
@@ -340,6 +442,7 @@ export const alerts: OperationalAlert[] = [
     sourceAgency: 'Central Water Commission (CWC)',
     description: 'Water level at 0.8m below danger mark with continuous catchment precipitation.',
     suggestedAction: 'Issue caution notice to heavy petroleum carriers on AS-21.',
+    voiceText: 'Central Water Commission watch: Diyung river rising. Heavy tankers advised caution.',
   },
 ];
 
@@ -421,6 +524,173 @@ export const platformPillars: PlatformPillar[] = [
   },
 ];
 
+export interface MultimodalOption {
+  mode: 'Road Highland Bypass' | 'NFR Rail Cargo Shuttle' | 'IWAI Inland Waterway (NW-2)';
+  name: string;
+  route: string;
+  travelTime: string;
+  delayVsStandard: string;
+  capacity: string;
+  riskScore: number;
+  status: 'Recommended' | 'Standby' | 'Active Transit';
+  transitCostIndex: string;
+  carbonOffset: string;
+  agency: string;
+}
+
+export const multimodalFallbackOptions: Record<string, MultimodalOption[]> = {
+  'NH-27': [
+    {
+      mode: 'Road Highland Bypass',
+      name: 'Umrangso → Lanka Hill Diversion',
+      route: 'Guwahati → Lanka → Umrangso → Haflong → Silchar',
+      travelTime: '7h 12m',
+      delayVsStandard: '+42 min',
+      capacity: 'Up to 24 MT Multi-Axle Trucks',
+      riskScore: 48,
+      status: 'Recommended',
+      transitCostIndex: 'Standard +8%',
+      carbonOffset: '+12 kg CO2/ton',
+      agency: 'Assam PWD (NH) & State Highway Patrol',
+    },
+    {
+      mode: 'NFR Rail Cargo Shuttle',
+      name: 'NFR Lumding–Badarpur Hill Section Ro-Ro',
+      route: 'Guwahati Depot → Lumding Railhead → Badarpur Junction (Silchar)',
+      travelTime: '5h 30m',
+      delayVsStandard: '-1h 00m (Fast Freight)',
+      capacity: '1,400 Metric Tonnes (42 BTPN Tankers / BoxN Wagons)',
+      riskScore: 22,
+      status: 'Active Transit',
+      transitCostIndex: 'Bulk Subsidized (-18%)',
+      carbonOffset: '-42% Carbon Emissions',
+      agency: 'Northeast Frontier Railway (NFR) Disaster Ops',
+    },
+    {
+      mode: 'IWAI Inland Waterway (NW-2)',
+      name: 'Brahmaputra River Barge + Road Feeder',
+      route: 'Pandu Multi-Modal Port (Guwahati) → Jogighopa Terminal → Dhubri Riverhead',
+      travelTime: '9h 45m',
+      delayVsStandard: '+3h 15m',
+      capacity: '600 Metric Tonnes Heavy Ro-Pax Barge',
+      riskScore: 16,
+      status: 'Standby',
+      transitCostIndex: 'Eco-Economic (-26%)',
+      carbonOffset: '-58% Carbon Emissions',
+      agency: 'Inland Waterways Authority of India (IWAI)',
+    },
+  ],
+};
+
+export interface BVSParameter {
+  id: string;
+  name: string;
+  symbol: string;
+  weight: number;
+  description: string;
+  currentValue: number;
+  unit: string;
+  min: number;
+  max: number;
+}
+
+export const defaultBVSParameters: BVSParameter[] = [
+  {
+    id: 'geology',
+    name: 'Geological Stratum Fragility',
+    symbol: 'G',
+    weight: 0.35,
+    description: 'Sedimentary shale & sandstone shear weakness rating (GSI lithology database)',
+    currentValue: 0.85,
+    unit: 'Index [0-1]',
+    min: 0.1,
+    max: 1.0,
+  },
+  {
+    id: 'slope',
+    name: 'Mountain Slope Inclination',
+    symbol: 'S',
+    weight: 0.25,
+    description: 'Digital Elevation Model (DEM) slope steepness angle',
+    currentValue: 44,
+    unit: 'Degrees (°)',
+    min: 10,
+    max: 75,
+  },
+  {
+    id: 'rain',
+    name: 'Dynamic 24h Rainfall Rate',
+    symbol: 'R',
+    weight: 0.25,
+    description: 'IMD Doppler & AWS precipitation volume in catchment',
+    currentValue: 124,
+    unit: 'mm / 24h',
+    min: 0,
+    max: 250,
+  },
+  {
+    id: 'moisture',
+    name: 'InSAR Soil Saturation Index',
+    symbol: 'M',
+    weight: 0.15,
+    description: 'Sentinel-1 InSAR soil moisture & pore-water pressure saturation',
+    currentValue: 88,
+    unit: '% Saturated',
+    min: 0,
+    max: 100,
+  },
+];
+
+export interface VoiceAdvisory {
+  language: 'English' | 'हिन्दी' | 'অসমীয়া' | 'বাংলা' | 'মৈতৈলোন্';
+  langCode: string;
+  region: string;
+  announcement: string;
+}
+
+export const bhashiniVoiceAdvisories: VoiceAdvisory[] = [
+  {
+    language: 'English',
+    langCode: 'en-IN',
+    region: 'National Standard',
+    announcement: 'NER-SARTHI Emergency Alert: Heavy landslide warning on National Highway 27 at Jatinga Escarpment. All commercial freight diverted via Umrangso.',
+  },
+  {
+    language: 'हिन्दी',
+    langCode: 'hi-IN',
+    region: 'Central Command',
+    announcement: 'एनईआर-सारथी आपातकालीन सूचना: राष्ट्रीय राजमार्ग 27 पर जतिंगा में भूस्खलन का भारी जोखिम है। सभी मालवाहक वाहनों को उमरांगसो मार्ग पर मोड़ा जा रहा है।',
+  },
+  {
+    language: 'অসমীয়া',
+    langCode: 'as-IN',
+    region: 'Assam & Barak Valley',
+    announcement: 'এনইআৰ-সাৰথি জৰুৰী সতৰ্কবাৰ্তা: ডিমা হাছাওৰ জাতিংগাত ভূমিস্খলনৰ উচ্চ আশংকা। গুৱাহাটী-শিলচৰ সংযোগী বাহনসমূহ উমৰাংচু বাইপাচেৰে প্ৰেৰণ কৰা হৈছে।',
+  },
+  {
+    language: 'বাংলা',
+    langCode: 'bn-IN',
+    region: 'Tripura & Southern Assam',
+    announcement: 'এনইআর-সারথি সতর্কবার্তা: জাতীয় সড়ক ২৭-এ জটিঙ্গা পাহাড়ে ধসের ঝুঁকি বৃদ্ধি পেয়েছে। শিলচর ও আগরতলাগামী সমস্ত ট্রাক উমরাংসো হয়ে যাত্রা করুন।',
+  },
+  {
+    language: 'মৈতৈলোন্',
+    langCode: 'mni-IN',
+    region: 'Manipur Imphal Corridor',
+    announcement: 'NER-SARTHI paorou: National Highway 27 da Jatinga maphamda leingak khaba themjinbire. Umrangso lambida gari maru oiba maram sing chatkhrasan.',
+  },
+];
+
+// Live convoy simulation replay path points (Guwahati to Silchar via Umrangso)
+export const convoySimulationPoints = [
+  { x: 41, y: 39, name: 'Guwahati Central Depot', speed: '55 km/h', status: 'Departed Green Corridor', time: '06:00 IST' },
+  { x: 47, y: 41, name: 'Lanka Inspection Checkpost', speed: '48 km/h', status: 'RFID FASTag Cleared', time: '07:35 IST' },
+  { x: 50, y: 46, name: 'Umrangso Highland Detour Turnoff', speed: '34 km/h', status: 'Bypass Enforced (NH-27 KM 148 Blocked)', time: '08:50 IST' },
+  { x: 51, y: 49, name: 'Diyung Valley Bridge Crossing', speed: '31 km/h', status: 'CWC Sensor Water Level Normal', time: '09:40 IST' },
+  { x: 49, y: 50, name: 'Haflong Hill Outskirts', speed: '28 km/h', status: 'NavIC L5 Altitude 1,108m', time: '10:20 IST' },
+  { x: 48, y: 54, name: 'Badarpur NFR Rail Interchange', speed: '42 km/h', status: 'Approaching Silchar Civil Hub', time: '11:15 IST' },
+];
+
 export const aiQueries = [
   {
     q: 'Which routes to Dima Hasao are at critical risk?',
@@ -437,6 +707,14 @@ export const aiQueries = [
     sources: ['Fleet NavIC Telemetry Feed', 'Civil Hospital Medical Store Registers', 'Project Swastik Escort Log'],
     action: 'Confirm green-corridor priority signal clearance with Assam Police at Lanka Checkpost.',
     routeToInspect: 'NH-10',
+  },
+  {
+    q: 'What is the multimodal fallback if Siliguri Corridor or NH-27 closes completely?',
+    answer: 'If the road corridor is fully severed, NER-SARTHI triggers the NFR Broad-Gauge Freight Railhead from Lumding to Badarpur (1,400 MT capacity, 5.5h) and activates IWAI National Waterway-2 Ro-Pax barge service between Pandu Port (Guwahati) and Jogighopa Terminal (600 MT per barge voyage).',
+    confidence: 97,
+    sources: ['PM Gati Shakti Intermodal Master Database', 'NFR Freight Division Maligaon', 'IWAI Regional Directive NW-2'],
+    action: 'Switch dispatch manifest from Road to NFR Rail Freight rake #NER-RAIL-408 at Lumding.',
+    routeToInspect: 'NH-27',
   },
   {
     q: 'What is the safest bypass route to Gangtok and Mangan?',

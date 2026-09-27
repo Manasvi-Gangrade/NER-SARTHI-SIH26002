@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   AlertTriangle, ArrowUpRight, Clock3, MapPin, Navigation, Truck, 
   Layers, Compass, CloudRain, Shield, Mountain, Activity, CheckCircle2, 
-  ExternalLink, Info, Phone, Radio, ChevronRight, UserCheck, Eye, EyeOff
+  ExternalLink, Info, Phone, Radio, ChevronRight, UserCheck, Eye, EyeOff,
+  Play, Pause, RotateCcw, Volume2, Anchor, Train, Calculator, Sliders,
+  ShieldAlert, Sparkles, Filter, Droplets
 } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { 
@@ -10,8 +12,10 @@ import {
   Tooltip, BarChart, Bar, PieChart, Pie, Cell 
 } from 'recharts';
 import { 
-  districts, alerts, vehicles, weekly, corridors, type Risk, 
-  type DistrictData, type OperationalAlert, type VehicleTelemetry 
+  districts, alerts, vehicles, weekly, corridors, strategicChokepoints,
+  multimodalFallbackOptions, defaultBVSParameters, convoySimulationPoints,
+  type Risk, type DistrictData, type OperationalAlert, type VehicleTelemetry,
+  type StrategicChokepoint, type MultimodalOption, type BVSParameter
 } from '@/lib/ner-data';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -112,12 +116,12 @@ export function SectionHead({
   aside?: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-card/60 px-5 py-3.5 backdrop-blur-xs">
+    <div className="flex items-center justify-between border-b border-border bg-muted/40 px-5 py-3.5">
       <div>
-        <p className="section-kicker">{kicker}</p>
-        <h2 className="mt-0.5 text-sm sm:text-base font-bold text-foreground">{title}</h2>
+        <span className="section-kicker">{kicker}</span>
+        <h3 className="text-sm sm:text-base font-bold text-foreground mt-0.5">{title}</h3>
       </div>
-      {aside && <div className="text-xs">{aside}</div>}
+      {aside && <div>{aside}</div>}
     </div>
   );
 }
@@ -126,69 +130,242 @@ export function Status({
   status,
   children,
 }: {
-  status: Risk;
-  children?: React.ReactNode;
+  status: Risk | 'ok' | 'blocked' | 'open' | 'rerouted';
+  children: React.ReactNode;
 }) {
   return (
-    <span className={cn('inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-bold', `status-${status}`)}>
-      <span className="size-1.5 rounded-full bg-current" />
-      {children ?? status.toUpperCase()}
+    <span
+      className={cn(
+        'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wide',
+        status === 'critical' || status === 'blocked'
+          ? 'bg-critical/15 text-critical border border-critical/30'
+          : status === 'watch' || status === 'rerouted'
+          ? 'bg-amber-500/15 text-amber-800 border border-amber-500/30'
+          : 'bg-safe/15 text-safe border border-safe/30'
+      )}
+    >
+      <span
+        className={cn(
+          'size-1.5 rounded-full inline-block',
+          status === 'critical' || status === 'blocked'
+            ? 'bg-critical pulse-dot'
+            : status === 'watch' || status === 'rerouted'
+            ? 'bg-amber-600'
+            : 'bg-safe'
+        )}
+      />
+      {children}
     </span>
   );
 }
 
-/* 
- * High-Tech Interactive GIS Map Component
- * Visualizes 8 NER states, district risk markers, national highways, and real-time pass conditions
+/*
+ * Direct Query Action Ribbon (NETRA Rail & INDRA Inspired)
+ */
+export function DirectQueryBar({
+  onSelectChokepoint,
+  onOpenBVS,
+  onOpenSimulation,
+}: {
+  onSelectChokepoint?: (chokepointId: string) => void;
+  onOpenBVS?: () => void;
+  onOpenSimulation?: () => void;
+}) {
+  return (
+    <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+      <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground shrink-0 flex items-center gap-1 bg-muted px-2 py-1 rounded">
+        <Sparkles className="size-3 text-primary" /> Direct Focus:
+      </span>
+      
+      <button
+        type="button"
+        onClick={() => onSelectChokepoint?.('CHK-05')}
+        className="shrink-0 flex items-center gap-1.5 rounded-full border border-critical/40 bg-critical/10 px-3 py-1 text-xs font-bold text-critical hover:bg-critical/20 transition-all shadow-2xs"
+      >
+        <span className="size-1.5 rounded-full bg-critical pulse-dot" />
+        Dima Hasao KM 148 Slump
+      </button>
+
+      <button
+        type="button"
+        onClick={() => onSelectChokepoint?.('CHK-01')}
+        className="shrink-0 flex items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-900 hover:bg-amber-500/20 transition-all shadow-2xs"
+      >
+        <span className="size-1.5 rounded-full bg-amber-600" />
+        Siliguri 22km "Chicken's Neck"
+      </button>
+
+      <button
+        type="button"
+        onClick={() => onSelectChokepoint?.('CHK-02')}
+        className="shrink-0 flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-bold text-primary hover:bg-primary/20 transition-all shadow-2xs"
+      >
+        <Anchor className="size-3" />
+        Jogighopa MMLP Multimodal Hub
+      </button>
+
+      <button
+        type="button"
+        onClick={() => onSelectChokepoint?.('CHK-03')}
+        className="shrink-0 flex items-center gap-1.5 rounded-full border border-sky-500/40 bg-sky-500/10 px-3 py-1 text-xs font-bold text-sky-900 hover:bg-sky-500/20 transition-all shadow-2xs"
+      >
+        <Droplets className="size-3 text-sky-600" />
+        Majuli Island Brahmaputra Ferry
+      </button>
+
+      <button
+        type="button"
+        onClick={onOpenBVS}
+        className="shrink-0 flex items-center gap-1.5 rounded-full border border-purple-500/40 bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-900 hover:bg-purple-500/20 transition-all shadow-2xs"
+      >
+        <Calculator className="size-3 text-purple-700" />
+        BVS Dynamic Bayesian Risk Model
+      </button>
+
+      <button
+        type="button"
+        onClick={onOpenSimulation}
+        className="shrink-0 flex items-center gap-1.5 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-900 hover:bg-emerald-500/20 transition-all shadow-2xs"
+      >
+        <Play className="size-3 text-emerald-700" />
+        Convoy Replay Simulator
+      </button>
+    </div>
+  );
+}
+
+/*
+ * Advanced GIS Map View with Hazard Clusters, Chokepoints & Convoy Simulation
  */
 export function MapView({
   compact = false,
   highlightCorridor,
   onSelectDistrict,
+  focusChokepointId,
 }: {
   compact?: boolean;
   highlightCorridor?: string;
   onSelectDistrict?: (d: DistrictData) => void;
+  focusChokepointId?: string | undefined;
 }) {
   const [activeDistrict, setActiveDistrict] = useState<DistrictData>(districts[0]!);
-  const [layer, setLayer] = useState<'all' | 'critical' | 'corridors'>('all');
+  const [clusterFilter, setClusterFilter] = useState<'all' | 'Cluster A' | 'Cluster B'>('all');
   const [showHighways, setShowHighways] = useState(true);
+  const [showChokepoints, setShowChokepoints] = useState(true);
+  const [activeChokepoint, setActiveChokepoint] = useState<StrategicChokepoint | null>(null);
 
-  const displayedDistricts =
-    layer === 'critical'
-      ? districts.filter((d) => d.status === 'critical' || d.status === 'watch')
-      : districts;
+  // Convoy Replay Simulation State
+  const [simPlaying, setSimPlaying] = useState(false);
+  const [simIndex, setSimIndex] = useState(0);
+
+  // Handle external chokepoint focus
+  useEffect(() => {
+    if (focusChokepointId) {
+      const match = strategicChokepoints.find(c => c.id === focusChokepointId);
+      if (match) {
+        setActiveChokepoint(match);
+      }
+    }
+  }, [focusChokepointId]);
+
+  // Simulation Replay Timer
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (simPlaying) {
+      timer = setInterval(() => {
+        setSimIndex((prev) => (prev + 1) % convoySimulationPoints.length);
+      }, 1600);
+    }
+    return () => clearInterval(timer);
+  }, [simPlaying]);
+
+  const displayedDistricts = districts.filter(d => {
+    if (clusterFilter === 'all') return true;
+    return d.hazardCluster === clusterFilter;
+  });
 
   const handleSelect = (d: DistrictData) => {
     setActiveDistrict(d);
+    setActiveChokepoint(null);
     if (onSelectDistrict) onSelectDistrict(d);
   };
 
+  const handleChokepointClick = (chk: StrategicChokepoint) => {
+    setActiveChokepoint(chk);
+  };
+
+  const speakDistrictAdvisory = (d: DistrictData) => {
+    if ('speechSynthesis' in window) {
+      const msg = new SpeechSynthesisUtterance(
+        `${d.name} in ${d.state}. Risk index ${d.score} out of 100. 24 hour rainfall is ${d.rainfall24h} millimeters. Pass status is ${d.passStatus}.`
+      );
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(msg);
+    }
+  };
+
+  const currentSimPoint = convoySimulationPoints[simIndex]!;
+
   return (
-    <div className="relative h-full min-h-[360px] w-full rounded-md bg-slate-900/5 dark:bg-slate-950/40 p-2 sm:p-4 select-none">
-      {/* Top Map Layer Controls */}
+    <div className="relative h-full min-h-[380px] w-full rounded-md bg-slate-900/5 dark:bg-slate-950/40 p-2 sm:p-4 select-none">
+      {/* Top Map Layer & Cluster Switcher Controls (from INDRA / NETRA) */}
       {!compact && (
-        <div className="absolute right-4 top-4 z-20 flex flex-wrap items-center gap-1.5 rounded-md border border-border bg-card/90 p-1 shadow-sm backdrop-blur-md text-xs">
+        <div className="absolute right-4 top-4 z-20 flex flex-wrap items-center gap-1.5 rounded-lg border border-border bg-card/95 p-1.5 shadow-md backdrop-blur-md text-xs">
+          {/* Cluster Filter Buttons */}
+          <div className="flex items-center gap-1 bg-muted/60 p-0.5 rounded-md">
+            <button
+              type="button"
+              className={cn(
+                'rounded px-2 py-1 text-[11px] font-bold transition-all',
+                clusterFilter === 'all' ? 'bg-primary text-primary-foreground shadow-2xs' : 'text-muted-foreground hover:text-foreground'
+              )}
+              onClick={() => setClusterFilter('all')}
+            >
+              All Regions (18)
+            </button>
+            <button
+              type="button"
+              className={cn(
+                'rounded px-2 py-1 text-[11px] font-bold transition-all flex items-center gap-1',
+                clusterFilter === 'Cluster A' ? 'bg-critical text-white shadow-2xs' : 'text-muted-foreground hover:text-critical'
+              )}
+              onClick={() => setClusterFilter('Cluster A')}
+              title="Cluster A: Highland Landslides (Sikkim, Dima Hasao, Meghalaya)"
+            >
+              <Mountain className="size-3" />
+              Cluster A: Highlands
+            </button>
+            <button
+              type="button"
+              className={cn(
+                'rounded px-2 py-1 text-[11px] font-bold transition-all flex items-center gap-1',
+                clusterFilter === 'Cluster B' ? 'bg-sky-600 text-white shadow-2xs' : 'text-muted-foreground hover:text-sky-700'
+              )}
+              onClick={() => setClusterFilter('Cluster B')}
+              title="Cluster B: Riverine Floods & Islands (Majuli, Dhubri, Brahmaputra)"
+            >
+              <Droplets className="size-3" />
+              Cluster B: Plains & River
+            </button>
+          </div>
+
+          {/* Toggle Chokepoints */}
           <Button
             size="sm"
-            variant={layer === 'all' ? 'default' : 'ghost'}
-            className="h-7 px-2.5 text-[11px] font-bold"
-            onClick={() => setLayer('all')}
+            variant={showChokepoints ? 'secondary' : 'ghost'}
+            className="h-7 px-2 text-[11px] font-bold"
+            onClick={() => setShowChokepoints(!showChokepoints)}
+            title="Toggle Strategic Bottlenecks Overlay"
           >
-            All 16 Districts
+            <ShieldAlert className="size-3.5 mr-1 text-primary" />
+            Gateways
           </Button>
-          <Button
-            size="sm"
-            variant={layer === 'critical' ? 'default' : 'ghost'}
-            className="h-7 px-2.5 text-[11px] font-bold text-critical"
-            onClick={() => setLayer('critical')}
-          >
-            Hazard Watch
-          </Button>
+
+          {/* Toggle Highways */}
           <Button
             size="sm"
             variant={showHighways ? 'secondary' : 'ghost'}
-            className="h-7 px-2 text-[11px]"
+            className="h-7 px-2 text-[11px] font-bold"
             onClick={() => setShowHighways(!showHighways)}
             title="Toggle Highway Overlay"
           >
@@ -198,7 +375,34 @@ export function MapView({
         </div>
       )}
 
-      {/* SVG Canvas */}
+      {/* Convoy Simulation Floating Play Bar */}
+      {!compact && (
+        <div className="absolute left-4 top-4 z-20 flex items-center gap-2 rounded-lg border border-border bg-card/95 px-3 py-1.5 shadow-md backdrop-blur-md text-xs">
+          <Button
+            size="sm"
+            variant="outline"
+            className="h-7 px-2 font-bold text-xs"
+            onClick={() => setSimPlaying(!simPlaying)}
+          >
+            {simPlaying ? <Pause className="size-3.5 text-amber-600 mr-1" /> : <Play className="size-3.5 text-emerald-600 mr-1" />}
+            <span>{simPlaying ? 'Pause Telemetry' : 'Play Convoy Replay'}</span>
+          </Button>
+          <button
+            type="button"
+            className="p-1 text-muted-foreground hover:text-foreground"
+            onClick={() => setSimIndex(0)}
+            title="Reset Simulation"
+          >
+            <RotateCcw className="size-3.5" />
+          </button>
+          <div className="hidden sm:flex items-center gap-2 border-l border-border pl-2 font-mono text-[10px]">
+            <span className="text-primary font-bold">{currentSimPoint.name}</span>
+            <span className="text-muted-foreground">• {currentSimPoint.speed}</span>
+          </div>
+        </div>
+      )}
+
+      {/* SVG GIS Canvas */}
       <svg
         viewBox="0 0 880 540"
         className="h-full w-full"
@@ -215,6 +419,9 @@ export function MapView({
             <stop offset="50%" stopColor="#d97706" />
             <stop offset="100%" stopColor="#dc2626" />
           </linearGradient>
+          <filter id="shadow-drop" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#000" floodOpacity="0.25" />
+          </filter>
         </defs>
 
         {/* Background Grid */}
@@ -264,6 +471,16 @@ export function MapView({
           />
         </g>
 
+        {/* Brahmaputra River Artery (Waterway NW-2 Representation) */}
+        <path
+          d="M 270 215 Q 360 210 440 180 T 570 160 T 670 165"
+          fill="none"
+          stroke="#0284c7"
+          strokeWidth="3.5"
+          strokeDasharray="8 4"
+          opacity="0.6"
+        />
+
         {/* State Label Callouts */}
         {!compact && (
           <g fill="#0b3d6b" opacity="0.65" fontSize="10.5" fontWeight="800" textAnchor="middle" letterSpacing="0.05em">
@@ -288,6 +505,14 @@ export function MapView({
               stroke="#dc2626"
               strokeWidth={highlightCorridor === 'NH-27' ? '5' : '3.5'}
               className="animate-pulse"
+            />
+            {/* NH-27 Umrangso Bypass Detour */}
+            <path
+              d="M 410 220 Q 450 250 440 280 L 445 285"
+              fill="none"
+              stroke="#16a34a"
+              strokeWidth="2.5"
+              strokeDasharray="4 2"
             />
             {/* NH-06 Shillong to Silchar (Watch) */}
             <path
@@ -322,11 +547,72 @@ export function MapView({
           </g>
         )}
 
+        {/* Strategic Chokepoints Overlay (Siliguri, Jogighopa, Majuli, Srirampur, Jatinga, Sonapur) */}
+        {showChokepoints && (
+          <g>
+            {strategicChokepoints.map((chk) => {
+              const cx = chk.x * 8.8;
+              const cy = chk.y * 5.4;
+              const isSelected = activeChokepoint?.id === chk.id;
+
+              return (
+                <g
+                  key={chk.id}
+                  transform={`translate(${cx}, ${cy})`}
+                  className="cursor-pointer transition-transform group"
+                  onClick={() => handleChokepointClick(chk)}
+                >
+                  {/* Outer Radar Pulse */}
+                  <circle
+                    r={isSelected ? 16 : 12}
+                    fill={chk.status === 'High Alert' ? '#dc2626' : chk.status === 'Multi-Modal Shift' ? '#0b3d6b' : '#d97706'}
+                    opacity={isSelected ? 0.4 : 0.2}
+                    className="radar-pulse-ring"
+                  />
+                  {/* Center Diamond Marker */}
+                  <polygon
+                    points="0,-8 8,0 0,8 -8,0"
+                    fill={chk.status === 'High Alert' ? '#dc2626' : chk.status === 'Multi-Modal Shift' ? '#0b3d6b' : '#d97706'}
+                    stroke="#ffffff"
+                    strokeWidth={isSelected ? 2.5 : 1.5}
+                    className="filter drop-shadow-md group-hover:scale-125 transition-transform"
+                  />
+                  {/* Badge Text */}
+                  <text
+                    x="0"
+                    y="16"
+                    fontSize="7.5"
+                    fontWeight="800"
+                    fill="#0f172a"
+                    textAnchor="middle"
+                    className="pointer-events-none select-none bg-white font-mono"
+                  >
+                    {chk.name.split(' ')[0]}
+                  </text>
+                </g>
+              );
+            })}
+          </g>
+        )}
+
+        {/* Convoy Simulation Animated Vehicle */}
+        <g
+          transform={`translate(${currentSimPoint.x * 8.8}, ${currentSimPoint.y * 5.4})`}
+          className="transition-all duration-700 ease-in-out pointer-events-none"
+        >
+          <circle r="14" fill="#16a34a" opacity="0.3" className="animate-ping" />
+          <circle r="8" fill="#16a34a" stroke="#ffffff" strokeWidth="2" />
+          <rect x="-14" y="-22" width="28" height="12" rx="3" fill="#1e293b" />
+          <text x="0" y="-13" fontSize="7" fontWeight="bold" fill="#ffffff" textAnchor="middle">
+            NER-MED
+          </text>
+        </g>
+
         {/* District Risk Markers */}
         {displayedDistricts.map((d) => {
-          const cx = (d.x * 8.8);
-          const cy = (d.y * 5.4);
-          const isSelected = activeDistrict.id === d.id;
+          const cx = d.x * 8.8;
+          const cy = d.y * 5.4;
+          const isSelected = activeDistrict.id === d.id && !activeChokepoint;
           const isCritical = d.status === 'critical';
           const isWatch = d.status === 'watch';
 
@@ -342,7 +628,7 @@ export function MapView({
                 <circle
                   r={isCritical ? 18 : 13}
                   fill={isCritical ? '#dc2626' : '#d97706'}
-                  opacity={isCritical ? '0.25' : '0.18'}
+                  opacity={isCritical ? 0.25 : 0.18}
                   className={isCritical ? 'pulse-dot' : ''}
                 />
               )}
@@ -366,7 +652,7 @@ export function MapView({
                 textAnchor="middle"
                 className="pointer-events-none select-none drop-shadow-xs"
               >
-                {d.name}
+                {d.name.split(' ')[0]}
               </text>
             </g>
           );
@@ -374,12 +660,17 @@ export function MapView({
       </svg>
 
       {/* Floating Detailed District Quick-Intel Card */}
-      {!compact && activeDistrict && (
-        <div className="absolute left-4 bottom-4 z-20 w-[300px] sm:w-[340px] rounded-lg border border-border bg-card/95 p-4 shadow-lg backdrop-blur-md animate-fade-in">
+      {!compact && activeDistrict && !activeChokepoint && (
+        <div className="absolute left-4 bottom-4 z-20 w-[300px] sm:w-[350px] rounded-xl border border-border bg-card/95 p-4 shadow-xl backdrop-blur-md animate-fade-in">
           <div className="flex items-start justify-between gap-2 border-b border-border pb-2.5">
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                {activeDistrict.state} · District Telemetry
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                {activeDistrict.hazardCluster === 'Cluster A' ? (
+                  <Mountain className="size-3 text-critical" />
+                ) : (
+                  <Droplets className="size-3 text-sky-600" />
+                )}
+                {activeDistrict.state} · {activeDistrict.hazardCluster}
               </span>
               <h3 className="text-base font-black text-foreground">{activeDistrict.name}</h3>
             </div>
@@ -425,9 +716,14 @@ export function MapView({
           </div>
 
           <div className="mt-3 pt-2.5 border-t border-border flex items-center justify-between">
-            <span className="text-[10px] font-bold text-primary flex items-center gap-1">
-              <Activity className="size-3" /> {activeDistrict.activeIncidents} Active Signal(s)
-            </span>
+            <button
+              type="button"
+              onClick={() => speakDistrictAdvisory(activeDistrict)}
+              className="text-[11px] font-bold text-primary flex items-center gap-1 hover:underline"
+              title="Speak District Advisory Aloud"
+            >
+              <Volume2 className="size-3.5" /> Speak Audio SITREP
+            </button>
             <Button asChild size="sm" variant="ghost" className="h-6 text-[11px] p-0 text-primary hover:underline">
               <Link to="/corridors">Inspect Corridor →</Link>
             </Button>
@@ -435,11 +731,277 @@ export function MapView({
         </div>
       )}
 
+      {/* Floating Detailed Chokepoint Intel Card */}
+      {!compact && activeChokepoint && (
+        <div className="absolute left-4 bottom-4 z-20 w-[320px] sm:w-[380px] rounded-xl border border-primary/30 bg-card/95 p-4 shadow-xl backdrop-blur-md animate-fade-in">
+          <div className="flex items-start justify-between gap-2 border-b border-border pb-2.5">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-primary flex items-center gap-1">
+                <ShieldAlert className="size-3" />
+                Strategic Bottleneck · {activeChokepoint.category}
+              </span>
+              <h3 className="text-base font-black text-foreground">{activeChokepoint.name}</h3>
+            </div>
+            <Status status={activeChokepoint.status === 'High Alert' ? 'critical' : activeChokepoint.status === 'Multi-Modal Shift' ? 'watch' : 'safe'}>
+              {activeChokepoint.status}
+            </Status>
+          </div>
+
+          <div className="mt-2.5 text-xs text-muted-foreground leading-relaxed">
+            <p>{activeChokepoint.description}</p>
+          </div>
+
+          <div className="mt-3 rounded-lg bg-muted/60 p-2.5 text-xs space-y-1">
+            <p className="flex items-center justify-between">
+              <span className="text-muted-foreground">Traffic Flow:</span>
+              <strong className="text-foreground">{activeChokepoint.trafficLoad}</strong>
+            </p>
+            <p className="flex items-center justify-between">
+              <span className="text-muted-foreground">Significance:</span>
+              <strong className="text-primary">{activeChokepoint.significance}</strong>
+            </p>
+          </div>
+
+          <div className="mt-3 rounded border border-safe/30 bg-safe/5 p-2 text-xs">
+            <span className="font-bold text-safe block">Automated Multimodal Detour:</span>
+            <p className="text-[11px] text-muted-foreground">{activeChokepoint.alternativeRoute}</p>
+          </div>
+
+          <div className="mt-3 pt-2 border-t border-border flex justify-between items-center">
+            <Button size="sm" variant="ghost" className="h-6 text-[10px]" onClick={() => setActiveChokepoint(null)}>
+              Back to District View
+            </Button>
+            <Button asChild size="sm" className="h-6 text-[10px] font-bold bg-primary text-primary-foreground">
+              <Link to="/corridors">Simulate Failover →</Link>
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Map Legend */}
-      <div className="absolute right-4 bottom-4 z-10 flex items-center gap-3 rounded bg-card/85 px-3 py-1.5 text-[10px] font-bold text-muted-foreground border border-border/80 backdrop-blur-xs shadow-xs">
+      <div className="absolute right-4 bottom-4 z-10 flex flex-wrap items-center gap-3 rounded bg-card/90 px-3 py-1.5 text-[10px] font-bold text-muted-foreground border border-border/80 backdrop-blur-xs shadow-xs">
         <span className="flex items-center gap-1"><span className="size-2 rounded-full bg-safe inline-block" /> Safe (&lt;50)</span>
         <span className="flex items-center gap-1"><span className="size-2 rounded-full bg-amber-500 inline-block" /> Watch (50-74)</span>
         <span className="flex items-center gap-1"><span className="size-2 rounded-full bg-critical inline-block" /> Critical (75+)</span>
+        <span className="flex items-center gap-1"><polygon points="0,-4 4,0 0,4 -4,0" fill="#0b3d6b" className="inline-block" /> Chokepoints</span>
+      </div>
+    </div>
+  );
+}
+
+/*
+ * Base Vulnerability Score (BVS) Interactive Bayesian Calculator
+ * Mathematical model based on the SIH Problem Statement & Proposal Document
+ */
+export function BVSBayesianCalculator() {
+  const [params, setParams] = useState<BVSParameter[]>(defaultBVSParameters);
+
+  const updateParam = (id: string, val: number) => {
+    setParams(prev => prev.map(p => p.id === id ? { ...p, currentValue: val } : p));
+  };
+
+  const geology = params.find(p => p.id === 'geology')?.currentValue ?? 0.85;
+  const slope = params.find(p => p.id === 'slope')?.currentValue ?? 44;
+  const rain = params.find(p => p.id === 'rain')?.currentValue ?? 124;
+  const moisture = params.find(p => p.id === 'moisture')?.currentValue ?? 88;
+
+  // Normalized components
+  const normalizedSlope = Math.min(1, slope / 60);
+  const normalizedRain = Math.min(1.5, rain / 100);
+  const normalizedMoisture = moisture / 100;
+
+  // Static Geological Prior BVS (0 to 100)
+  const staticBVS = (
+    (0.35 * geology) +
+    (0.25 * normalizedSlope) +
+    (0.25 * (rain / 200)) +
+    (0.15 * normalizedMoisture)
+  ) * 100;
+
+  // Bayesian Dynamic Rainfall Multiplier: Risk(t) = clamp(BVS * (1 + 0.85 * (Rain / RainThreshold)), 0, 100)
+  const rainMultiplier = 1 + (0.85 * (rain / 120));
+  const dynamicRiskScore = Math.min(100, Math.round(staticBVS * (rainMultiplier / 1.5)));
+
+  return (
+    <div className="panel p-5 sm:p-6 space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-4">
+        <div>
+          <span className="section-kicker flex items-center gap-1.5">
+            <Calculator className="size-3 text-purple-700" />
+            Physics-Informed Mathematical Engine
+          </span>
+          <h3 className="text-lg font-black text-foreground mt-0.5">
+            Base Vulnerability Score (BVS) Bayesian Simulator
+          </h3>
+          <p className="text-xs text-muted-foreground mt-1 max-w-2xl">
+            Simulates dynamic landslide and slope failure probability by cross-multiplying static lithological shear resistance with live Doppler precipitation and InSAR ground displacement.
+          </p>
+        </div>
+
+        <div className="text-right shrink-0">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Computed Dynamic Risk</span>
+          <div className="flex items-baseline justify-end gap-1.5 mt-0.5">
+            <span className={cn(
+              'text-3xl font-black',
+              dynamicRiskScore >= 75 ? 'text-critical' : dynamicRiskScore >= 50 ? 'text-amber-700' : 'text-safe'
+            )}>
+              {dynamicRiskScore}
+            </span>
+            <span className="text-xs text-muted-foreground font-bold">/ 100</span>
+          </div>
+          <span className={cn(
+            'inline-block text-[10px] font-bold px-2 py-0.5 rounded uppercase mt-0.5',
+            dynamicRiskScore >= 75 ? 'bg-critical/15 text-critical' : dynamicRiskScore >= 50 ? 'bg-amber-500/15 text-amber-800' : 'bg-safe/15 text-safe'
+          )}>
+            {dynamicRiskScore >= 75 ? 'Divert Heavy Convoys' : dynamicRiskScore >= 50 ? 'Escorted Slow Transit' : 'Standard Green Transit'}
+          </span>
+        </div>
+      </div>
+
+      {/* Mathematical Formulation Pill Box */}
+      <div className="rounded-lg border border-purple-500/20 bg-purple-500/5 p-3.5 text-xs text-purple-950 font-mono flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <span className="font-bold text-purple-900 block font-sans">Official SIH Risk Formulation:</span>
+          <span className="text-[11px]">BVS = 0.35·G + 0.25·S + 0.25·R + 0.15·M</span>
+        </div>
+        <div className="text-right">
+          <span className="font-bold text-purple-900 block font-sans">Dynamic Escalation Multiplier:</span>
+          <span className="text-[11px]">Risk(t) = BVS × [ 1 + α·(Rain / Rain_thresh) ]</span>
+        </div>
+      </div>
+
+      {/* Parameter Sliders Grid */}
+      <div className="grid sm:grid-cols-2 gap-4">
+        {params.map((p) => (
+          <div key={p.id} className="rounded-lg border border-border p-3.5 bg-card/60">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-foreground">
+                {p.name} ({p.symbol})
+              </span>
+              <span className="font-mono text-xs font-bold text-primary">
+                {p.currentValue} {p.unit}
+              </span>
+            </div>
+            <p className="text-[10px] text-muted-foreground mt-0.5">{p.description}</p>
+            <input
+              type="range"
+              min={p.min}
+              max={p.max}
+              step={p.id === 'geology' ? 0.05 : 1}
+              value={p.currentValue}
+              onChange={(e) => updateParam(p.id, parseFloat(e.target.value))}
+              className="mt-3 w-full accent-primary h-1.5 bg-muted rounded cursor-pointer"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/*
+ * Multi-Modal Fallback Dispatch Panel (PM Gati Shakti & National Waterway-2)
+ */
+export function MultimodalFallbackPanel({
+  corridorId = 'NH-27',
+}: {
+  corridorId?: string;
+}) {
+  const options = multimodalFallbackOptions[corridorId] ?? multimodalFallbackOptions['NH-27']!;
+  const [selectedMode, setSelectedMode] = useState<string>(options[0]!.name);
+  const [dispatched, setDispatched] = useState<string | null>(null);
+
+  const handleDispatch = (name: string) => {
+    setDispatched(name);
+    setTimeout(() => {
+      window.alert(`Official Inter-Ministry Dispatch Order transmitted for ${name} under PM Gati Shakti protocols.`);
+      setDispatched(null);
+    }, 400);
+  };
+
+  return (
+    <div className="panel p-5 sm:p-6 space-y-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-4">
+        <div>
+          <span className="section-kicker flex items-center gap-1.5">
+            <Train className="size-3 text-primary" />
+            PM Gati Shakti Multimodal Redundancy
+          </span>
+          <h3 className="text-lg font-black text-foreground mt-0.5">
+            Triple-Tier Failover Engine for {corridorId}
+          </h3>
+          <p className="text-xs text-muted-foreground mt-1">
+            When high-mountain highways are severed, NER-SARTHI autonomously computes and provisions NFR Freight Rail and IWAI National Waterway-2 river barges.
+          </p>
+        </div>
+
+        <span className="text-xs font-bold text-safe bg-safe/10 border border-safe/30 px-3 py-1 rounded-full shrink-0">
+          3 Redundancy Modes Ready
+        </span>
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-4">
+        {options.map((opt) => {
+          const isSelected = selectedMode === opt.name;
+          return (
+            <div
+              key={opt.name}
+              onClick={() => setSelectedMode(opt.name)}
+              className={cn(
+                'rounded-xl border p-4 cursor-pointer transition-all flex flex-col justify-between',
+                isSelected ? 'border-primary bg-primary/5 shadow-md' : 'border-border bg-card hover:bg-muted/30'
+              )}
+            >
+              <div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="rounded bg-muted px-2 py-0.5 text-[10px] font-bold text-muted-foreground">
+                    {opt.mode}
+                  </span>
+                  <Status status={opt.status === 'Recommended' ? 'safe' : opt.status === 'Active Transit' ? 'safe' : 'watch'}>
+                    {opt.status}
+                  </Status>
+                </div>
+
+                <h4 className="mt-2.5 text-sm font-black text-foreground">{opt.name}</h4>
+                <p className="text-[11px] text-muted-foreground mt-1">{opt.route}</p>
+
+                <div className="mt-3 grid grid-cols-2 gap-2 text-xs border-t border-b border-border py-2.5 my-2.5">
+                  <div>
+                    <span className="block text-[10px] text-muted-foreground">Transit Duration</span>
+                    <strong className="font-bold text-foreground">{opt.travelTime}</strong>
+                    <span className="block text-[9px] text-primary">{opt.delayVsStandard}</span>
+                  </div>
+                  <div>
+                    <span className="block text-[10px] text-muted-foreground">Max Capacity</span>
+                    <strong className="font-bold text-foreground">{opt.capacity.split(' ')[0]} MT</strong>
+                    <span className="block text-[9px] text-emerald-600">{opt.carbonOffset}</span>
+                  </div>
+                </div>
+
+                <p className="text-[10px] text-muted-foreground font-medium">
+                  Operating Agency: <strong className="text-foreground">{opt.agency}</strong>
+                </p>
+              </div>
+
+              <div className="mt-4 pt-3 border-t border-border flex items-center justify-between">
+                <span className="text-[11px] font-bold text-foreground">{opt.transitCostIndex}</span>
+                <Button
+                  size="sm"
+                  className={cn(
+                    'h-7 text-xs font-bold',
+                    isSelected ? 'bg-primary text-primary-foreground' : 'variant-outline'
+                  )}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDispatch(opt.name);
+                  }}
+                >
+                  {dispatched === opt.name ? 'Dispatching...' : 'Dispatch Order'}
+                </Button>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

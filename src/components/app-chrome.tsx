@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { bhashiniVoiceAdvisories, strategicChokepoints } from '@/lib/ner-data';
+import { useTTS, GoogleTranslateWidget } from './tts-context';
 
 export function AppChrome({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -14,8 +15,7 @@ export function AppChrome({ children }: { children: React.ReactNode }) {
   const [authModal, setAuthModal] = useState<'login' | 'reg' | null>(null);
   const [timeStr, setTimeStr] = useState('12:06:00 pm');
   const [dateStr, setDateStr] = useState('Sun, 27 Sep');
-  const [audioEnabled, setAudioEnabled] = useState(false);
-  const [selectedLang, setSelectedLang] = useState('English');
+  const { speak, stop, speaking, ttsEnabled, setTtsEnabled } = useTTS();
   const [copied, setCopied] = useState(false);
 
   // Floating INDRABOT / SARTHIBOT Drawer state
@@ -55,32 +55,12 @@ export function AppChrome({ children }: { children: React.ReactNode }) {
   }, []);
 
   const toggleAudio = () => {
-    const nextState = !audioEnabled;
-    setAudioEnabled(nextState);
-    if ('speechSynthesis' in window) {
-      if (nextState) {
-        const item = bhashiniVoiceAdvisories.find(v => v.language === selectedLang) ?? bhashiniVoiceAdvisories[0];
-        const announcement = item ? item.announcement : 'Voice guidance enabled for NER-SARTHI.';
-        const utterance = new SpeechSynthesisUtterance(
-          `Voice guidance enabled. ${announcement.slice(0, 85)}...`
-        );
-        utterance.rate = 1.0;
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(utterance);
-      } else {
-        window.speechSynthesis.cancel();
-      }
-    }
-  };
-
-  const handleLanguageChange = (lang: string) => {
-    setSelectedLang(lang);
-    if (audioEnabled && 'speechSynthesis' in window) {
-      const item = bhashiniVoiceAdvisories.find(v => v.language === lang) ?? bhashiniVoiceAdvisories[0];
-      const announcement = item ? item.announcement : 'Language updated.';
-      const utterance = new SpeechSynthesisUtterance(announcement);
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utterance);
+    const nextState = !ttsEnabled;
+    setTtsEnabled(nextState);
+    if (nextState) {
+      speak('Text-to-speech voice guidance enabled. Hover over any text, button, or alert to hear it spoken in your selected language.');
+    } else {
+      stop();
     }
   };
 
@@ -132,67 +112,61 @@ Authenticated by: National Decision Support System (NER-SARTHI)`;
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
       {/* 
         ====================================================
-        1. INDRA EXACT TOP NAVBAR
+        1. TOP NAVBAR - SLEEK PREMIUM HYBRID
         ====================================================
       */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-2xs">
+      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-slate-200/90 shadow-[0_2px_15px_-3px_rgba(9,37,72,0.06)]">
         <div className="mx-auto flex max-w-[1540px] items-center justify-between gap-4 px-4 py-2.5 lg:px-8">
           {/* Left capsule: Time, Date, Location, Weather */}
-          <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-100/80 px-3.5 py-1.5 text-xs text-slate-600 shadow-2xs font-medium">
-            <span className="flex items-center gap-1.5 font-bold text-slate-800">
-              <Clock className="size-3.5 text-slate-500" />
+          <div className="flex items-center gap-2 rounded-full border border-slate-200/80 bg-slate-100/90 px-3.5 py-1.5 text-xs text-slate-700 shadow-2xs font-medium">
+            <span className="flex items-center gap-1.5 font-black text-[#092548]">
+              <Clock className="size-3.5 text-blue-600" />
               {timeStr}
             </span>
             <span className="text-slate-300">|</span>
-            <span>{dateStr}</span>
+            <span className="font-semibold text-slate-600">{dateStr}</span>
             <span className="text-slate-300 hidden sm:inline">|</span>
-            <span className="hidden sm:flex items-center gap-1">
+            <span className="hidden sm:flex items-center gap-1 font-semibold text-slate-800">
               <MapPin className="size-3.5 text-red-500" />
               Guwahati · New Delhi (MDoNER)
             </span>
             <span className="text-slate-300 hidden md:inline">|</span>
-            <span className="hidden md:flex items-center gap-1 font-semibold text-slate-700">
-              <Cloud className="size-3.5 text-sky-500" />
+            <span className="hidden md:flex items-center gap-1 font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded-full border border-sky-200/60">
+              <Cloud className="size-3.5 text-sky-600" />
               24.2°C · NER Grid
             </span>
           </div>
 
           {/* Right Action Tools: Speaker, Select Language, Simulation, Registration, Login */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* Blue Speaker Button */}
+            {/* Voice Guidance Speaker Button (Hover-to-Speak TTS) */}
             <button
               type="button"
               onClick={toggleAudio}
-              className="grid size-9 place-items-center rounded-lg border border-sky-200 bg-sky-50 text-blue-600 hover:bg-sky-100 transition-colors shadow-2xs"
-              title={audioEnabled ? 'Turn Off Audio Guidance' : 'Turn On Audio Guidance'}
+              className={`grid size-9 place-items-center rounded-xl border text-white shadow-xs transition-all ${
+                ttsEnabled 
+                  ? 'bg-emerald-600 border-emerald-500 ring-2 ring-emerald-400/40' 
+                  : 'bg-[#092548] hover:bg-blue-900 border-blue-900'
+              }`}
+              title={ttsEnabled ? 'Voice Guidance Active (Hover over text to speak)' : 'Enable Voice Guidance (Hover over text to speak)'}
             >
-              {audioEnabled ? <Volume2 className="size-4 animate-pulse text-emerald-600" /> : <Volume2 className="size-4" />}
+              {ttsEnabled ? (
+                <Volume2 className={`size-4 ${speaking ? 'animate-bounce text-emerald-200' : 'animate-pulse'}`} />
+              ) : (
+                <VolumeX className="size-4 opacity-80" />
+              )}
             </button>
 
-            {/* Select Language Dropdown */}
-            <div className="relative">
-              <select
-                aria-label="Select Regional Language"
-                value={selectedLang}
-                onChange={(e) => handleLanguageChange(e.target.value)}
-                className="h-9 rounded-lg border border-slate-300 bg-white px-3 py-1 text-xs font-semibold text-slate-700 shadow-2xs hover:border-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-600 cursor-pointer"
-              >
-                <option value="English">Select Language</option>
-                <option value="English">English</option>
-                <option value="हिन्दी">हिन्दी (Hindi)</option>
-                <option value="অসমীয়া">অসমীয়া (Assamese)</option>
-                <option value="বাংলা">বাংলা (Bengali)</option>
-                <option value="মৈতৈলোন্">মৈতৈলোন্ (Meitei)</option>
-                <option value="Bodo">बड़ो (Bodo)</option>
-                <option value="Mizo">Mizo ṭawng</option>
-              </select>
+            {/* Google Translate 230+ Regional Languages Widget */}
+            <div className="flex items-center">
+              <GoogleTranslateWidget />
             </div>
 
             {/* Simulation Pill Button */}
             <Button
               variant="outline"
               size="sm"
-              className="h-9 rounded-lg border-blue-200 text-blue-600 font-bold text-xs hover:bg-blue-50 gap-1.5 shadow-2xs hidden sm:inline-flex"
+              className="h-9 rounded-xl border-blue-300 text-blue-700 font-black text-xs hover:bg-blue-50 gap-1.5 shadow-2xs hidden sm:inline-flex"
               onClick={() => {
                 const el = document.getElementById('bvs-section') || document.getElementById('dashboard-view');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -205,7 +179,7 @@ Authenticated by: National Decision Support System (NER-SARTHI)`;
             {/* Registration Emerald Pill */}
             <Button
               size="sm"
-              className="h-9 rounded-lg bg-[#059669] hover:bg-emerald-700 text-white font-bold text-xs uppercase px-3.5 sm:px-4 shadow-xs"
+              className="h-9 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black text-xs uppercase px-3.5 sm:px-4 shadow-sm hover:shadow"
               onClick={() => setSitrepModal(true)}
             >
               SITREP REPORT
@@ -214,7 +188,7 @@ Authenticated by: National Decision Support System (NER-SARTHI)`;
             {/* Login Royal Blue Pill */}
             <Button
               size="sm"
-              className="h-9 rounded-lg bg-[#2563eb] hover:bg-blue-700 text-white font-bold text-xs uppercase px-4 shadow-xs"
+              className="h-9 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs uppercase px-4 shadow-sm hover:shadow"
               onClick={() => setAuthModal('login')}
             >
               LOGIN
@@ -223,7 +197,7 @@ Authenticated by: National Decision Support System (NER-SARTHI)`;
             {/* Mobile Nav Toggle */}
             <button
               type="button"
-              className="lg:hidden p-1.5 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-100"
+              className="lg:hidden p-1.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100"
               onClick={() => setOpen(!open)}
               aria-label="Toggle navigation menu"
             >
@@ -231,6 +205,91 @@ Authenticated by: National Decision Support System (NER-SARTHI)`;
             </button>
           </div>
         </div>
+
+        {/* Dedicated Desktop Module Navigation Bar - High Contrast Glassmorphic (Shown on inner routes) */}
+        {path !== '/' && (
+          <div className="hidden lg:block border-t border-slate-200/80 bg-slate-50/90 backdrop-blur-md">
+          <div className="mx-auto flex max-w-[1540px] items-center justify-between px-4 lg:px-8">
+            <div className="flex items-center gap-1.5 py-1.5">
+              <Link
+                to="/"
+                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-black transition-all ${
+                  path === '/' 
+                    ? 'bg-[#092548] text-white shadow-sm ring-1 ring-blue-500/30' 
+                    : 'text-slate-700 hover:text-blue-700 hover:bg-white/80'
+                }`}
+              >
+                <span>🌐</span>
+                <span>Command Center</span>
+              </Link>
+              <Link
+                to="/corridors"
+                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-black transition-all ${
+                  path.startsWith('/corridors') 
+                    ? 'bg-[#092548] text-white shadow-sm ring-1 ring-blue-500/30' 
+                    : 'text-slate-700 hover:text-blue-700 hover:bg-white/80'
+                }`}
+              >
+                <span>🏔️</span>
+                <span>Strategic Corridors</span>
+              </Link>
+              <Link
+                to="/fleet"
+                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-black transition-all ${
+                  path.startsWith('/fleet') 
+                    ? 'bg-[#092548] text-white shadow-sm ring-1 ring-blue-500/30' 
+                    : 'text-slate-700 hover:text-blue-700 hover:bg-white/80'
+                }`}
+              >
+                <span>🚚</span>
+                <span>NavIC Fleet</span>
+              </Link>
+              <Link
+                to="/roles"
+                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-black transition-all ${
+                  path.startsWith('/roles') 
+                    ? 'bg-[#092548] text-white shadow-sm ring-1 ring-blue-500/30' 
+                    : 'text-slate-700 hover:text-blue-700 hover:bg-white/80'
+                }`}
+              >
+                <span>👥</span>
+                <span>Role Portals (6)</span>
+              </Link>
+              <Link
+                to="/citizen"
+                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-black transition-all ${
+                  path.startsWith('/citizen') 
+                    ? 'bg-[#092548] text-white shadow-sm ring-1 ring-blue-500/30' 
+                    : 'text-slate-700 hover:text-blue-700 hover:bg-white/80'
+                }`}
+              >
+                <span>📱</span>
+                <span>Citizen Kiosk</span>
+              </Link>
+              <Link
+                to="/copilot"
+                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-black transition-all ${
+                  path.startsWith('/copilot') 
+                    ? 'bg-[#092548] text-white shadow-sm ring-1 ring-blue-500/30' 
+                    : 'text-slate-700 hover:text-blue-700 hover:bg-white/80'
+                }`}
+              >
+                <span>🤖</span>
+                <span>AI Co-Pilot</span>
+              </Link>
+            </div>
+
+            <div className="flex items-center gap-3 text-[11px] font-bold text-slate-600">
+              <span className="flex items-center gap-1.5 bg-emerald-50 text-emerald-800 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                <span className="size-2 rounded-full bg-emerald-600 inline-block animate-pulse"></span>
+                InSAR & Doppler Grid Live
+              </span>
+              <span className="text-slate-300">|</span>
+              <span className="text-[#092548] font-black uppercase tracking-wider">MDoNER · Govt of India</span>
+            </div>
+          </div>
+        </div>
+      )}
 
         {/* Mobile Dropdown Nav */}
         {open && (

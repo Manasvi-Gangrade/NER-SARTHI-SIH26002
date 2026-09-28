@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { AppChrome } from "../components/app-chrome";
+import { TTSProvider } from "../components/tts-context";
 
 function NotFoundComponent() {
   return (
@@ -85,7 +86,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "alternate icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
   shellComponent: RootShell,
@@ -113,7 +115,9 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AppChrome><Outlet /></AppChrome>
+      <TTSProvider>
+        <AppChrome><Outlet /></AppChrome>
+      </TTSProvider>
     </QueryClientProvider>
   );
 }

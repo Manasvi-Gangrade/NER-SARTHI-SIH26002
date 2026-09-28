@@ -991,7 +991,7 @@ export function MultimodalFallbackPanel({
                     'h-7 text-xs font-bold',
                     isSelected ? 'bg-primary text-primary-foreground' : 'variant-outline'
                   )}
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     handleDispatch(opt.name);
                   }}

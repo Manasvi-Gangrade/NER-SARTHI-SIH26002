@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { PageHeading, Metrics, SectionHead, Status, Alerts } from '@/components/ner-ui';
 import { metadata, type Risk } from '@/lib/ner-data';
 
-const operationalRoles = [
+export const operationalRoles = [
   {
     id: 'citizen-panel',
     name: 'Citizen & Commuter Portal',
